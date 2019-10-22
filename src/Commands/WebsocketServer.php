@@ -6,6 +6,7 @@ use BeyondCode\LaravelWebSockets\Console\StartWebSocketServer;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 use BeyondCode\LaravelWebSockets\Server\Logger\WebsocketsLogger;
 use BeyondCode\LaravelWebSockets\Server\WebSocketServerFactory;
+use Flarum\Settings\SettingsRepositoryInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 class WebsocketServer extends StartWebsocketServer
@@ -15,10 +16,33 @@ class WebsocketServer extends StartWebsocketServer
         return $this;
     }
 
+    protected function supersedeOption(string $option)
+    {
+        $input = $this->option($option);
 
+        if (isset($input) && ($option === 'host' && $input !== '0.0.0.0')) {
+            return $input;
+        }
+
+        /** @var SettingsRepositoryInterface $settings */
+        $settings = app('flarum.settings');
+        $setting = $settings->get("hyn-websocket.app_{$option}");
+
+        return !empty($setting) ? $setting : $input;
+    }
 
     public function handle()
     {
+        $this->input->setOption(
+            'port',
+            $this->supersedeOption('port')
+        );
+
+        $this->input->setOption(
+            'host',
+            $this->supersedeOption('host')
+        );
+
         $this
 //            ->configureStatisticsLogger()
             ->configureHttpLogger()
@@ -31,7 +55,6 @@ class WebsocketServer extends StartWebsocketServer
 
     public function registerCustomRoutes()
     {
-        app(WebsocketsLogger::class)->enable(true);
         return $this;
     }
 

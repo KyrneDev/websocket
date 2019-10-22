@@ -1,5 +1,5 @@
 {
-    "name": "hyn/flarum-websocket",
+    "name": "hyn/flarum-ext-websocket",
     "description": "Replaces pusher server with an integrated websocket server.",
     "keywords": [
         "extension",
@@ -20,7 +20,7 @@
         "source": "https://github.com/hyn/flarum-ext-websocket"
     },
     "require": {
-        "flarum/core": "^0.1.0-beta.10",
+        "flarum/core": "^0.1.0-beta.11",
         "beyondcode/laravel-websockets": "^1.3"
     },
     "autoload": {

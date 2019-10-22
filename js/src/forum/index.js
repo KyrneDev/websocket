@@ -11,11 +11,11 @@ app.initializers.add('flarum-pusher', () => {
   const loadPusher = m.deferred();
 
   $.getScript('//js.pusher.com/3.0/pusher.min.js', () => {
-    const socket = new Pusher(app.forum.attribute('pusherKey'), {
-      authEndpoint: app.forum.attribute('apiUrl') + '/pusher/auth',
-      cluster: app.forum.attribute('pusherCluster'),
-      wsHost: window.location.hostname,
-      wsPort: 6001,
+    const socket = new Pusher(app.forum.attribute('websocketKey'), {
+      authEndpoint: app.forum.attribute('apiUrl') + '/websocket/auth',
+      // cluster: app.forum.attribute('pusherCluster'),
+      wsHost: app.forum.attribute('websocketHost') || window.location.hostname,
+      wsPort: app.forum.attribute('websocketPort') || 6001,
       disableStats: true,
       encrypted: false,
       auth: {

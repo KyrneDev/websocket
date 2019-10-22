@@ -2,6 +2,8 @@
 
 namespace Hyn\Websocket\Listener;
 
+use BeyondCode\LaravelWebSockets\Apps\App;
+use BeyondCode\LaravelWebSockets\Apps\AppProvider;
 use Flarum\Api\Event\Serializing;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -21,11 +23,17 @@ class AddPusherApi
         $this->settings = $settings;
     }
 
-    public function __invoke(Serializing $event)
+    public function handle(Serializing $event)
     {
         if ($event->isSerializer(ForumSerializer::class)) {
-            $event->attributes['pusherKey'] = $this->settings->get('flarum-pusher.app_key');
-            $event->attributes['pusherCluster'] = $this->settings->get('flarum-pusher.app_cluster');
+            /** @var AppProvider $provider */
+            $provider = app(AppProvider::class);
+            /** @var App $app */
+            $app = optional($provider->first());
+
+            $event->attributes['websocketKey'] = $app->key;
+            $event->attributes['websocketHost'] = $app->host;
+            $event->attributes['websocketPort'] = $app->port ?? $this->settings->get('hyn-websocket.app_port', 6001);
         }
     }
 }

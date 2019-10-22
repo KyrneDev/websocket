@@ -4,39 +4,58 @@ namespace Hyn\Websocket\Provider;
 
 use BeyondCode\LaravelWebSockets\Apps\App;
 use BeyondCode\LaravelWebSockets\Apps\AppProvider as Contract;
+use BeyondCode\LaravelWebSockets\Server\Logger\WebsocketsLogger;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 
 class AppProvider extends ServiceProvider
 {
+    public function boot()
+    {
+        $this->app->resolving(WebsocketsLogger::class, function (WebsocketsLogger $logger) {
+            $logger->enable(true);
+        });
+    }
     public function register()
     {
         $this->app->bind(Contract::class, function () {
             return new class implements Contract {
-                protected $app = [];
+                protected $apps = [];
 
                 public function __construct()
                 {
                     /** @var SettingsRepositoryInterface $settings */
                     $settings = app('flarum.settings');
 
-                    $this->app = new App(
-                        $settings->get('hyn-websocket.pusher_app_id'),
-                        $settings->get('hyn-websocket.pusher_app_key'),
-                        $settings->get('hyn-websocket.pusher_app_secret')
-                    );
+                    $appId = $settings->get('hyn-websocket.app_id') ?? 1;
+                    $appKey = $settings->get('hyn-websocket.app_key');
+                    $appSecret = $settings->get('hyn-websocket.app_secret');
+
+                    if (isset($appId, $appSecret, $appKey)) {
+                        $this->apps[] = (new App(
+                            $settings->get('hyn-websocket.app_id') ?? 1,
+                            $settings->get('hyn-websocket.app_key'),
+                            $settings->get('hyn-websocket.app_secret')
+                        ))->setName($settings->get('forum_title'));
+                    }
                 }
 
                 /**  @return array[BeyondCode\LaravelWebSockets\AppProviders\App] */
                 public function all(): array
                 {
-                    return [$this->app];
+                    return $this->apps;
+                }
+
+                public function first(): ?App
+                {
+                    return Arr::first($this->all());
                 }
 
                 public function findById($appId): ?App
                 {
-                    if ($appId === $this->app->id) {
-                        return $this->app;
+                    if ($appId === optional($this->first())->id) {
+                        return $this->first();
                     }
 
                     return null;
@@ -44,8 +63,8 @@ class AppProvider extends ServiceProvider
 
                 public function findByKey(string $appKey): ?App
                 {
-                    if ($appKey === $this->app->key) {
-                        return $this->app;
+                    if ($appKey === optional($this->first())->key) {
+                        return $this->first();
                     }
 
                     return null;
@@ -53,8 +72,8 @@ class AppProvider extends ServiceProvider
 
                 public function findBySecret(string $appSecret): ?App
                 {
-                    if ($appSecret === $this->app->secret) {
-                        return $this->app;
+                    if ($appSecret === optional($this->first())->secret) {
+                        return $this->first();
                     }
 
                     return null;

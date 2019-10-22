@@ -140,11 +140,11 @@ __webpack_require__.r(__webpack_exports__);
 flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.initializers.add('flarum-pusher', function () {
   var loadPusher = m.deferred();
   $.getScript('//js.pusher.com/3.0/pusher.min.js', function () {
-    var socket = new Pusher(flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.forum.attribute('pusherKey'), {
-      authEndpoint: flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.forum.attribute('apiUrl') + '/pusher/auth',
-      cluster: flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.forum.attribute('pusherCluster'),
-      wsHost: window.location.hostname,
-      wsPort: 6001,
+    var socket = new Pusher(flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.forum.attribute('websocketKey'), {
+      authEndpoint: flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.forum.attribute('apiUrl') + '/websocket/auth',
+      // cluster: app.forum.attribute('pusherCluster'),
+      wsHost: flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.forum.attribute('websocketHost') || window.location.hostname,
+      wsPort: flarum_app__WEBPACK_IMPORTED_MODULE_1___default.a.forum.attribute('websocketPort') || 6001,
       disableStats: true,
       encrypted: false,
       auth: {

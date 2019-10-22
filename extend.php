@@ -4,14 +4,14 @@ namespace Hyn\Websocket;
 
 use Flarum\Api\Event\Serializing;
 use Flarum\Extend\Frontend;
-use Flarum\Extension\Event\Enabled;
+use Flarum\Extend\Routes;
 
 return [
     new Extend\Provider(Provider\AppProvider::class),
     new Extend\Command(Commands\WebsocketServer::class),
 
+    new Extend\GenerateApp(),
     (new Extend\Listen)
-        ->on(Enabled::class, Listener\GenerateApp::class)
         ->on(Serializing::class, Listener\AddPusherApi::class),
 
     (new Frontend('forum'))
@@ -20,4 +20,7 @@ return [
 
     (new Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js'),
+
+    (new Routes('api'))
+        ->post('/websocket/auth', 'websocket.auth', Api\Controller\AuthController::class),
 ];

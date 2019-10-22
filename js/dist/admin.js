@@ -159,30 +159,35 @@ function (_SettingsModal) {
   };
 
   _proto.title = function title() {
-    return app.translator.trans('flarum-pusher.admin.pusher_settings.title');
+    return app.translator.trans('hyn-websocket.admin.pusher_settings.title');
   };
 
   _proto.form = function form() {
     return [m("div", {
       className: "Form-group"
-    }, m("label", null, app.translator.trans('flarum-pusher.admin.pusher_settings.app_id_label')), m("input", {
+    }, m("label", null, app.translator.trans('hyn-websocket.admin.pusher_settings.app_id_label')), m("input", {
       className: "FormControl",
-      bidi: this.setting('flarum-pusher.app_id')
+      bidi: this.setting('hyn-websocket.app_id')
     })), m("div", {
       className: "Form-group"
-    }, m("label", null, app.translator.trans('flarum-pusher.admin.pusher_settings.app_key_label')), m("input", {
+    }, m("label", null, app.translator.trans('hyn-websocket.admin.pusher_settings.app_key_label')), m("input", {
       className: "FormControl",
-      bidi: this.setting('flarum-pusher.app_key')
+      bidi: this.setting('hyn-websocket.app_key')
     })), m("div", {
       className: "Form-group"
-    }, m("label", null, app.translator.trans('flarum-pusher.admin.pusher_settings.app_secret_label')), m("input", {
+    }, m("label", null, app.translator.trans('hyn-websocket.admin.pusher_settings.app_secret_label')), m("input", {
       className: "FormControl",
-      bidi: this.setting('flarum-pusher.app_secret')
+      bidi: this.setting('hyn-websocket.app_secret')
     })), m("div", {
       className: "Form-group"
-    }, m("label", null, app.translator.trans('flarum-pusher.admin.pusher_settings.app_cluster_label')), m("input", {
+    }, m("label", null, app.translator.trans('hyn-websocket.admin.pusher_settings.app_host_label')), m("input", {
       className: "FormControl",
-      bidi: this.setting('flarum-pusher.app_cluster')
+      bidi: this.setting('hyn-websocket.app_host')
+    })), m("div", {
+      className: "Form-group"
+    }, m("label", null, app.translator.trans('hyn-websocket.admin.pusher_settings.app_port_label')), m("input", {
+      className: "FormControl",
+      bidi: this.setting('hyn-websocket.app_port')
     }))];
   };
 
