@@ -16,8 +16,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/hyn/flarum-websocket/issues",
-        "source": "https://github.com/hyn/flarum-websocket"
+        "issues": "https://github.com/hyn/flarum-ext-websocket/issues",
+        "source": "https://github.com/hyn/flarum-ext-websocket"
     },
     "require": {
         "flarum/core": "^0.1.0-beta.10",
