@@ -1,0 +1,39 @@
+{
+    "name": "hyn/flarum-websocket",
+    "description": "Replaces pusher server with an integrated websocket server.",
+    "keywords": [
+        "extension",
+        "flarum", "hyn",
+        "websocket", "pusher", "realtime"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel@klabbers.email",
+            "homepage": "http://luceos.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/hyn/flarum-websocket/issues",
+        "source": "https://github.com/hyn/flarum-websocket"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.10",
+        "beyondcode/laravel-websockets": "^1.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hyn\\Websocket\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Websocket"
+        }
+    }
+}
