@@ -33,7 +33,7 @@ class AddPusherApi
 
             $event->attributes['websocketKey'] = $app->key;
             $event->attributes['websocketHost'] = $app->host;
-            $event->attributes['websocketPort'] = $app->port ?? $this->settings->get('hyn-websocket.app_port', 6001);
+            $event->attributes['websocketPort'] = $app->port ?? $this->settings->get('hyn-websocket.app_port') ?? 6001;
         }
     }
 }

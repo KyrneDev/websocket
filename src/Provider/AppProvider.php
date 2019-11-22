@@ -33,11 +33,15 @@ class AppProvider extends ServiceProvider
                     $appSecret = $settings->get('hyn-websocket.app_secret');
 
                     if (isset($appId, $appSecret, $appKey)) {
-                        $this->apps[] = (new App(
+                        $app = new App(
                             $settings->get('hyn-websocket.app_id') ?? 1,
                             $settings->get('hyn-websocket.app_key'),
                             $settings->get('hyn-websocket.app_secret')
-                        ))->setName($settings->get('forum_title'));
+                        );
+
+                        $this->apps[] = $app
+                            ->setName($settings->get('forum_title'))
+                            ->setHost($settings->get('hyn-websocket.app_host'));
                     }
                 }
 

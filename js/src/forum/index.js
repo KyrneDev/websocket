@@ -1,40 +1,47 @@
-/*global Pusher*/
-
 import { extend } from 'flarum/extend';
 import app from 'flarum/app';
 import DiscussionList from 'flarum/components/DiscussionList';
 import DiscussionPage from 'flarum/components/DiscussionPage';
 import IndexPage from 'flarum/components/IndexPage';
 import Button from 'flarum/components/Button';
+import Pusher from 'pusher-js';
 
-app.initializers.add('flarum-pusher', () => {
+app.initializers.add('hyn-websocket', () => {
+  Pusher.logToConsole = true;
+  
   const loadPusher = m.deferred();
-
-  $.getScript('//js.pusher.com/3.0/pusher.min.js', () => {
+  
+  const instantiatePusher = () => {
     const socket = new Pusher(app.forum.attribute('websocketKey'), {
       authEndpoint: app.forum.attribute('apiUrl') + '/websocket/auth',
-      // cluster: app.forum.attribute('pusherCluster'),
+      cluster: null,
       wsHost: app.forum.attribute('websocketHost') || window.location.hostname,
       wsPort: app.forum.attribute('websocketPort') || 6001,
+      wssPort: app.forum.attribute('websocketPort') || 6001,
       disableStats: true,
       encrypted: false,
       auth: {
         headers: {
           'X-CSRF-Token': app.session.csrfToken
         }
-      }
+      },
+      disabledTransports: ['xhr_polling', 'xhr_streaming', 'sockjs']
     });
 
     loadPusher.resolve({
       main: socket.subscribe('public'),
       user: app.session.user ? socket.subscribe('private-user' + app.session.user.id()) : null
     });
-  });
+    
+    return loadPusher;
+  }
 
   app.pusher = loadPusher.promise;
   app.pushedUpdates = [];
-
+  
   extend(DiscussionList.prototype, 'config', function(x, isInitialized, context) {
+    instantiatePusher();
+    
     if (isInitialized) return;
 
     app.pusher.then(channels => {

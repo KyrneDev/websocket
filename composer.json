@@ -31,6 +31,9 @@
             "src/helpers.php"
         ]
     },
+    "replace": {
+        "flarum/pusher": "*"
+    },
     "extra": {
         "flarum-extension": {
             "title": "Websocket"
