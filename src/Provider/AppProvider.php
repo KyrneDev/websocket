@@ -160,7 +160,7 @@ class AppProvider extends ServiceProvider
                 $encrypted = true;
             }
 
-            $host = $settings->get('kyrne-websocket.app_host') || $parsedUrl['host'];
+            $host = empty($settings->get('kyrne-websocket.app_host')) ? $parsedUrl['host'] : $settings->get('kyrne-websocket.app_host');
 
             if ($settings->get('kyrne-websocket.reverse_proxy')) {
                 $host = '127.0.0.1';
