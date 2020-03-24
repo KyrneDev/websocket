@@ -1,8 +1,9 @@
+
 # Websocket by Kyrne
 
 ## About
 
-Websockets is replacement for flarum/pusher, it's a locally hosted version that functions identically. Pusher can get very expensive for large forums, and can cause a serious headache if your must comply with GDPR. This websocket implementation is completely PHP based, no need to install extra software or tools.
+Websockets is a replacement for flarum/pusher, it's a locally hosted version that functions identically. Pusher can get very expensive for large forums and can cause a serious headache if you must comply with GDPR. This websocket implementation is completely PHP based, no need to install extra software or tools.
 
 
 ## Extension Compatibility 
@@ -19,7 +20,7 @@ Please follow Extiverse's installation instructions here:
 
 # Setup
 
-There are several options for setting up this extensions, firstly, make sure it's installed on your forum, but don't enable it just yet, we have some prep work to do. If you run into any problems, or just want someone to walk you through the install steps, don't hesitate to reach out to me on Discord @**Kyrne#9728**, and I'll be happy to help! I have also included a troubleshooting section down below, it contains fixes to some common problems. Once again, if you have any issues you need help with, please reach out to me.
+There are several options for setting up this extension, firstly, make sure it's installed on your forum, but don't enable it just yet, we have some prep work to do. If you run into any problems, or just want someone to walk you through the install steps, don't hesitate to reach out to me on Discord @**Kyrne#9728**, and I'll be happy to help! I have also included a troubleshooting section down below, it contains fixes to some common problems. Once again, if you have any issues you need help with, please reach out to me.
 
 ## Option 1 - Proxy w/ SSL (Recommended)
 
@@ -112,7 +113,7 @@ You can now save and close this file. These configurations will tell Nginx about
 
 ### Step 5:
 
-Open up the default provided `.nginx.conf` that came with your Flarum installation, it is usally just outside of your `public` directory. (Usually something like `/var/www/flarum` or `/var/www/html`) The top few lines should look like: 
+Open up the default provided `.nginx.conf` that came with your Flarum installation, it is usually just outside of your `public` directory. (Usually something like `/var/www/flarum` or `/var/www/html`) The top few lines should look like: 
 ```
 # Pass requests that don't refer directly to files in the filesystem to index.php
 location / {
@@ -138,7 +139,7 @@ Replacing the `/` after `location` with `@web`.
 
 ### Step 7:
 
-Once you have completed all the above steps, you can now enable the extension. Once enabled, the settings will pop up, make sure to turn on  the switch that says "Reverse Proxy Support" leave everything else as is. Then save your settings.
+Once you have completed all the above steps, you can now enable the extension. Once enabled, the settings will pop up, make sure to turn on the switch that says "Reverse Proxy Support" leave everything else as is. Then save your settings.
 
 ### Step 8: 
 You are now ready to turn on the websocket server! Skip down to that section.
@@ -146,11 +147,11 @@ You are now ready to turn on the websocket server! Skip down to that section.
 ## Option 2 - Websocket server handles SSL
 
 For this method, you will need to know the location of your fullchain ssl certificate for your domain (or the domain that the websocket server will be hosted on) as well as the private key for the same domain. Take a moment to locate these files, and copy down the path somewhere. If you don't know where these files are, take a look at your Nginx or Apache configurations, they will often have the paths in these files. If you use letsencrypt they can be commonly found in the `/etc/letsencrypt/live/your.domain` folder.
-> Note: These files must also be readable by your webserver (usually `www-data`).
+> Note: These files must also be readable by your web server (usually `www-data`).
 
 ### Step 1 - Portfowarding:
 
-As you will not being using your webserver to route the traffic, you will need to open a port so visitors of site can connect to the websocket server. If you are running your server on a VPS like DigitalOcean you simply need to execute a command to open the port. For Ubuntu run `sudo ufw allow {port}`. If you are running your server at home or through a router you control, make sure that port is pointing to your websever. You can lookup guides on the internet on how to forward ports for your specific router online.
+As you will not be using your webserver to route the traffic, you will need to open a port so visitors of your site can connect to the websocket server. If you are running your server on a VPS like DigitalOcean you simply need to execute a command to open the port. For Ubuntu run `sudo ufw allow {port}`. If you are running your server at home or through a router you control, make sure that port is pointing to your web server. You can look up guides on the internet on how to forward ports for your specific router online.
 > Note: The default port as installed is `2083`.
 
 If you are using Cloudflare please note that there are only certain ports that are allowed through their network on the basic plan. These ports are 
@@ -164,7 +165,7 @@ If you decide to change the port to something other than `2083` make sure to spe
 
 ### Step 2 - SSL Cert and Private Key:
 
-Go ahead and enable the extension in your admin panel at this point. Once the settings pop up, fill in the paths to both the SSL Certificate (Local Cert) and Private Key (Local PK). If your certificate is self sign, make sure to turn on the switch labelled "Self-Signed Certificate Support." If your keys are encrypted with a passphrase, enter it into its respective field in the settings. Then save your settings.
+Go ahead and enable the extension in your admin panel at this point. Once the settings pop up, fill in the paths to both the SSL Certificate (Local Cert) and Private Key (Local PK). If your certificate is self-sign, make sure to turn on the switch labeled "Self-Signed Certificate Support." If your keys are encrypted with a passphrase, enter it into its respective field in the settings. Then save your settings.
 
 ### Step 3 - All Done:
 
@@ -172,11 +173,11 @@ Your setup should be complete, you are now ready to turn on the websocket server
 
 ## Option 3 - Unsecure websocket server
 
-Please use this method with caution. This method should only be used (and is only possible with) a forum that doesn't use https. Ideally your forum should be using https as you are handling sensitive user data such as passwords. If you must use this method, it is the simplest to setup. You need only to install it, and follow step 1 from option #2. Then run the websocket server.
+Please use this method with caution. This method should only be used (and is only possible with) a forum that doesn't use https. Ideally, your forum should be using https as you are handling sensitive user data such as passwords. If you must use this method, it is the simplest to set up. You need only to install it and follow step 1 from option #2. Then run the websocket server.
 
 # Starting the Websocket Server
 
-Starting the server is the easiest part, simply navigate to your Flarum root directory and run `php flarum websocket:serve`. The server will take up a terminal session which isn't ideal. If you'd like to daemonize the process, please lookup how to use `nohup` or something similar.
+Starting the server is the easiest part, simply navigate to your Flarum root directory and run `php flarum websocket:serve`. The server will take up a terminal session which isn't ideal. If you'd like to daemonize the process, please look up how to use `nohup` or something similar.
 > Note: I would recommend testing your setup first before daemonizing it.
 
 # Verifying Successful Setup
@@ -199,17 +200,17 @@ After starting the websocket server, you will be able to see all the connections
 Connection id 213252186.960942107 sending message {"channel":"public","event":"newPost","data":"{\"postId\":158,\"discussionId\":43,\"tagIds\":[1]}"}
 ```
 
-If both your client-side, and server look similar to those, **congratulations!** Everything is working well and you are all done!
+If both your client-side, and server look similar to those, **Congratulations!** Everything is working well and you are all done!
 
 If you are shown an error or some other output, please proceed to the troubleshooting section.
 
 # Troubleshooting
 
-Unfortunately, this extension is quite complex and there a quite a few things that can go wrong with setup. Every server and setup is different, and can create new and unique challenges. As I said before, if you run into any issues you cannot solve yourself, or would like someone to help you through it, don't hesitate to reach out to me on Discord @**Kyrne#9728**.
+Unfortunately, this extension is quite complex and there a quite a few things that can go wrong with the setup. Every server and setup is different and can create new and unique challenges. As I said before, if you run into any issues you cannot solve yourself, or would like someone to help you through it, don't hesitate to reach out to me on Discord @**Kyrne#9728**.
 
 ## "Failed to listen on tcp://0.0.0.0:{port}"
 
-This usually means that the port you are trying to use for your websocket server is already in use by another process on your machine. Simply change the port you are going to use in the Extension Settings. Don't forget to portfoward this port and update any configurations you made using this port in the above steps (such as the Nginx proxy forward port). 
+This usually means that the port you are trying to use for your websocket server is already in use by another process on your machine. Simply change the port you are going to use in the Extension Settings. Don't forget to port forward this port and update any configurations you made using this port in the above steps (such as the Nginx proxy forward port). 
 
 ## "ERR_SSL_VERSION_OR_CIPHER_MISMATCH"
 
@@ -217,13 +218,19 @@ This error is usually caused when the SSL Certificate and Private Key either do 
 
 ##  "WebSocket is closed before the connection is established."
 
-The websocket server will not work double proxied. Please ensure that the Nginx instance that is forwarding the request to the websocket server is the most downstream (the closest to the user). Also ensure that the websocket server is running and on the correct port.
+The websocket server will not work double proxied. Please ensure that the Nginx instance that is forwarding the request to the websocket server is the most downstream (the closest to the user). Also, ensure that the websocket server is running and on the correct port.
 
 ## A 404 Error or "ERROR: The connection to {address} was interrupted while the page was loading
 
 If you are using the proxy setup, make sure Nginx is proxying the connection to the right port as well as IP (127.0.0.1 corresponds to the same device).
-If you are using the port forwarding method, make sure the port is open. While running the webserver use a tool like [Open Port Checker](https://www.yougetsignal.com/tools/open-ports/) to see if the port is open. If not, double check your port forwarding settings, or try a different port.
+If you are using the port forwarding method, make sure the port is open. While running the webserver use a tool like [Open Port Checker](https://www.yougetsignal.com/tools/open-ports/) to see if the port is open. If not, double-check your port forwarding settings, or try a different port.
 
 ## 426, 400, or any 500 error
 
 These can be more complicated to fix and vary greatly across different setups in terms of their cause. Please contact me on Discord @**Kyrne#9728** and I'll help you fix your specific problem.
+
+# In Closing
+
+Thank you very much for supporting my extension development work through your subscription. If there are any features you would like to see in the future, please reach out to me and I will do my best to make your request a reality.
+
+Take care fellow Flarumite!
