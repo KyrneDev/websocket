@@ -173,6 +173,7 @@ class AppProvider extends ServiceProvider
                 $options['host'] = $host;
                 $options['port'] = empty($settings->get('kyrne-websocket.app_port')) ? 2083 : $settings->get('kyrne-websocket.app_port');
                 $options['encrypted'] = $encrypted;
+                $options['scheme'] = $encrypted ? 'https' : 'http';
             }
 
             return new Pusher(
