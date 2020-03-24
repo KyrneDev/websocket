@@ -1,9 +1,9 @@
 {
-    "name": "hyn/flarum-ext-websocket",
+    "name": "kyrne/websocket",
     "description": "Replaces pusher server with an integrated websocket server.",
     "keywords": [
         "extension",
-        "flarum", "hyn",
+        "flarum", "kyrne",
         "websocket", "pusher", "realtime"
     ],
     "type": "flarum-extension",
@@ -13,19 +13,25 @@
             "name": "Daniël Klabbers",
             "email": "daniel@klabbers.email",
             "homepage": "http://luceos.com"
+        },
+        {
+            "name": "Charlie Kern",
+            "email": "charlie.k@redevs.org",
+            "homepage": "https://redevs.org"
         }
     ],
     "support": {
-        "issues": "https://github.com/hyn/flarum-ext-websocket/issues",
-        "source": "https://github.com/hyn/flarum-ext-websocket"
+        "issues": "https://github.com/kyrne/flarum-ext-websocket/issues",
+        "source": "https://github.com/kyrne/flarum-ext-websocket"
     },
     "require": {
         "flarum/core": "^0.1.0-beta.11",
-        "beyondcode/laravel-websockets": "^1.3"
+        "beyondcode/laravel-websockets": "1.3",
+        "fof/components": ">=0.1.0"
     },
     "autoload": {
         "psr-4": {
-            "Hyn\\Websocket\\": "src/"
+            "Kyrne\\Websocket\\": "src/"
         },
         "files": [
             "src/helpers.php"
@@ -36,7 +42,12 @@
     },
     "extra": {
         "flarum-extension": {
-            "title": "Websocket"
+            "title": "Websocket",
+            "icon": {
+                "name": "fas fa-wifi",
+                "backgroundColor": "#2196F3",
+                "color": "#E040FB"
+            }
         }
     }
 }

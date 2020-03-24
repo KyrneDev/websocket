@@ -1,6 +1,16 @@
 <?php
+/**
+ *
+ *  This file is part of kyrne/websocket
+ *
+ *  Copyright (c) 2020 Charlie Kern.
+ *
+ *  For the full copyright and license information, please view the EULA.md
+ *  file that was distributed with this source code.
+ *
+ */
 
-namespace Hyn\Websocket\Extend;
+namespace Kyrne\Websocket\Extend;
 
 use Flarum\Console\Event\Configuring;
 use Flarum\Extend\ExtenderInterface;

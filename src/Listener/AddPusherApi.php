@@ -1,6 +1,16 @@
 <?php
+/**
+ *
+ *  This file is part of kyrne/websocket
+ *
+ *  Copyright (c) 2020 Charlie Kern.
+ *
+ *  For the full copyright and license information, please view the EULA.md
+ *  file that was distributed with this source code.
+ *
+ */
 
-namespace Hyn\Websocket\Listener;
+namespace Kyrne\Websocket\Listener;
 
 use BeyondCode\LaravelWebSockets\Apps\App;
 use BeyondCode\LaravelWebSockets\Apps\AppProvider;
@@ -30,10 +40,13 @@ class AddPusherApi
             $provider = app(AppProvider::class);
             /** @var App $app */
             $app = optional($provider->first());
+            $settings = app('flarum.settings');
 
+            $event->attributes['websocketSecure'] = (bool) $settings->get('kyrne-websocket.force_secure');
+            $event->attributes['websocketReverseProxy'] = (bool) $settings->get('kyrne-websocket.reverse_proxy');
             $event->attributes['websocketKey'] = $app->key;
             $event->attributes['websocketHost'] = $app->host;
-            $event->attributes['websocketPort'] = $app->port ?? $this->settings->get('hyn-websocket.app_port') ?? 6001;
+            $event->attributes['websocketPort'] = $app->port ?? $this->settings->get('kyrne-websocket.app_port') ?? 6001;
         }
     }
 }
