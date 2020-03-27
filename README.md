@@ -16,7 +16,7 @@ Currently, websocket supports:
 
 ## Installing
 
-Please follow Extiverse's installation instructions here: 
+Please follow Extiverse's installation instructions here: https://extiverse.com/premium/subscriptions
 
 # Setup
 
