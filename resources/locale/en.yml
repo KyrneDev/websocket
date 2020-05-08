@@ -1,5 +1,12 @@
 kyrne-websocket:
 
+    # Translations in this namespace are used by the admin interface.
+    forum:
+
+    # These translations are used in the discussion list.
+        discussion_list:
+            show_updates_text: "Show {count} updated discussion|Show {count} updated discussions"
+
     ##
     # UNIQUE KEYS - The following keys are used in only one location each.
     ##
@@ -7,7 +14,7 @@ kyrne-websocket:
     # Translations in this namespace are used by the admin interface.
     admin:
 
-        # These translations are used in the Pusher Settings modal dialog.
+        # These translations are used in the Websockets Settings modal dialog.
         pusher_settings:
             local_cert_path: Local SSL Certificate Path
             local_pk_path: Local SSL Private Key Path
@@ -22,7 +29,7 @@ kyrne-websocket:
             title: Websocket/Pusher Settings
             reverse_proxy: Reverse Proxy Support
 
-      # These translations are used in the Pusher Settings modal dialog for help texts.
+      # These translations are used in the Websockets Settings modal dialog for help texts.
         help:
             app_id: Pusher App ID - leave as is if using built-in websocket server.
             app_key: Pusher App Key - leave as is if using built-in websocket server.

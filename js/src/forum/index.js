@@ -105,7 +105,7 @@ app.initializers.add('kyrne-websocket', () => {
                             this.loadingUpdated = true;
                         },
                         loading: this.loadingUpdated,
-                        children: app.translator.transChoice('flarum-pusher.forum.discussion_list.show_updates_text', count, {count})
+                        children: app.translator.transChoice('kyrne-websocket.forum.discussion_list.show_updates_text', count, {count})
                     })
                 );
             }
