@@ -9,6 +9,7 @@ use Flarum\Extend\Locales;
 use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
 use FoF\Components\Extend\AddFofComponents;
+use Kyrne\ExtCore\Extend\AddKyrneCore;
 
 return [
     new Extend\Provider(Provider\AppProvider::class),
@@ -16,6 +17,7 @@ return [
 
     new Extend\GenerateApp(),
     new AddFofComponents(),
+    new AddKyrneCore(),
 
     (new Extend\Listen)
         ->on(Serializing::class, Listener\AddPusherApi::class)

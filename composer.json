@@ -1,6 +1,6 @@
 {
     "name": "kyrne/websocket",
-    "description": "Replaces pusher server with an integrated websocket server.",
+    "description": "Integrated Pusher replacement.",
     "keywords": [
         "extension",
         "flarum", "kyrne",
@@ -27,7 +27,8 @@
     "require": {
         "flarum/core": "^0.1.0-beta.11",
         "beyondcode/laravel-websockets": "1.3",
-        "fof/components": ">=0.1.0"
+        "fof/components": ">=0.1.0",
+        "kyrne/ext-core": "*@dev"
     },
     "autoload": {
         "psr-4": {
@@ -43,10 +44,16 @@
     "extra": {
         "flarum-extension": {
             "title": "Websocket",
-            "icon": {
-                "background": "url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIxODg1IiB2aWV3Qm94PSIwIDAgMjU2IDE5MyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCI+PHBhdGggZD0iTTE5Mi40NCAxNDQuNjQ1aDMxLjc4VjY4LjMzOWwtMzUuODA1LTM1LjgwNC0yMi40NzIgMjIuNDcyIDI2LjQ5NyAyNi40OTd2NjMuMTR6bTMxLjg2NCAxNS45MzFIMTEzLjQ1Mkw4Ni45NTQgMTM0LjA4bDExLjIzNy0xMS4yMzYgMjEuODg1IDIxLjg4NWg0NS4wMjhsLTQ0LjM1Ny00NC40NDEgMTEuMzItMTEuMzIgNDQuMzU3IDQ0LjM1OFY4OC4yOTZsLTIxLjgwMS0yMS44MDEgMTEuMTUyLTExLjE1M0wxMTAuNjg1IDBIMGwzMS42OTYgMzEuNjk2di4wODRIOTcuNDM2bDIzLjIyNyAyMy4yMjctMzMuOTYgMzMuOTZMNjMuNDc2IDY1Ljc0VjQ3LjcxMmgtMzEuNzh2MzEuMTkzbDU1LjAwNyA1NS4wMDdMNjQuMzE0IDE1Ni4zbDM1LjgwNSAzNS44MDVIMjU2bC0zMS42OTYtMzEuNTI5eiIgZmlsbD0iIzIzMUYyMCIvPjwvc3ZnPg==) no-repeat, linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(224,64,251,1) 0%, rgba(33,150,243,1) 100%)",
-				"backgroundPosition": "center",
-				"backgroundSize": "2em"
+            "image": "url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIxODg1IiB2aWV3Qm94PSIwIDAgMjU2IDE5MyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCI+PHBhdGggZD0iTTE5Mi40NCAxNDQuNjQ1aDMxLjc4VjY4LjMzOWwtMzUuODA1LTM1LjgwNC0yMi40NzIgMjIuNDcyIDI2LjQ5NyAyNi40OTd2NjMuMTR6bTMxLjg2NCAxNS45MzFIMTEzLjQ1Mkw4Ni45NTQgMTM0LjA4bDExLjIzNy0xMS4yMzYgMjEuODg1IDIxLjg4NWg0NS4wMjhsLTQ0LjM1Ny00NC40NDEgMTEuMzItMTEuMzIgNDQuMzU3IDQ0LjM1OFY4OC4yOTZsLTIxLjgwMS0yMS44MDEgMTEuMTUyLTExLjE1M0wxMTAuNjg1IDBIMGwzMS42OTYgMzEuNjk2di4wODRIOTcuNDM2bDIzLjIyNyAyMy4yMjctMzMuOTYgMzMuOTZMNjMuNDc2IDY1Ljc0VjQ3LjcxMmgtMzEuNzh2MzEuMTkzbDU1LjAwNyA1NS4wMDdMNjQuMzE0IDE1Ni4zbDM1LjgwNSAzNS44MDVIMjU2bC0zMS42OTYtMzEuNTI5eiIgZmlsbD0iIzIzMUYyMCIvPjwvc3ZnPg==) no-repeat;",
+            "info": {
+                "link": "https://extiverse.com/extension/kyrne/websocket",
+                "location": "Extiverse"
+            },
+            "extra": {
+                "icon": "fab fa-github",
+                "link": "https://discuss.flarum.org/d/23473-websockets-locally-hosted-alternative-for-pusher",
+                "title": "Questions?",
+                "location": "Flarum Commmunity"
             }
         }
     }
