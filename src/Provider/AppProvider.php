@@ -22,6 +22,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
+use Psr\Log\LoggerInterface;
 use Pusher\Pusher;
 
 
@@ -167,6 +168,8 @@ class AppProvider extends ServiceProvider
                 $encrypted = false;
             }
 
+            $options['debug'] = $this->app->inDebugMode();
+
             if ($cluster = $settings->get('kyrne-websocket.app_cluster')) {
                 $options['cluster'] = $cluster;
             } else {
@@ -176,7 +179,7 @@ class AppProvider extends ServiceProvider
                 $options['scheme'] = $encrypted ? 'https' : 'http';
             }
 
-            return new Pusher(
+            $pusher = new Pusher(
                 $settings->get('kyrne-websocket.app_key'),
                 $settings->get('kyrne-websocket.app_secret'),
                 $settings->get('kyrne-websocket.app_id'),
@@ -184,6 +187,12 @@ class AppProvider extends ServiceProvider
                 $host,
                 $port
             );
+
+            if ($this->app->inDebugMode()) {
+                $pusher->setLogger(app('log'));
+            }
+
+            return $pusher;
         });
 
         $this->app->alias(Pusher::class, 'websocket.pusher');
