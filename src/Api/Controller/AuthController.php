@@ -13,6 +13,7 @@
 namespace Kyrne\Websocket\Api\Controller;
 
 use Flarum\Settings\SettingsRepositoryInterface;
+use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -36,7 +37,7 @@ class AuthController implements RequestHandlerInterface
         $userChannel = 'private-user'.$request->getAttribute('actor')->id;
         $body = $request->getParsedBody();
 
-        if (array_get($body, 'channel_name') === $userChannel) {
+        if (Arr::get($body, 'channel_name') === $userChannel) {
             $pusher = new Pusher(
                 $this->settings->get('kyrne-websocket.app_key'),
                 $this->settings->get('kyrne-websocket.app_secret'),
@@ -46,7 +47,7 @@ class AuthController implements RequestHandlerInterface
                 $this->settings->get('kyrne-websocket.app_port')
             );
 
-            $payload = json_decode($pusher->socket_auth($userChannel, array_get($body, 'socket_id')), true);
+            $payload = json_decode($pusher->socket_auth($userChannel, Arr::get($body, 'socket_id')), true);
 
             return new JsonResponse($payload);
         }
