@@ -46,7 +46,7 @@ app.initializers.add('kyrne-websocket', () => {
             Object.keys(channels).map((channel) => {
                 if (channels[channel] === null) return;
                 channels[channel].bind('newPost', data => {
-                    const params = this.attrs.params;
+                    const params = app.discussions.getParams();
 
                     if (!params.q && !params.sort && !params.filter) {
                         if (params.tags) {
@@ -57,10 +57,10 @@ app.initializers.add('kyrne-websocket', () => {
 
                         const id = String(data.discussionId);
 
-                        if ((!app.current.discussion || id !== app.current.discussion.id()) && app.pushedUpdates.indexOf(id) === -1) {
+                        if ((!app.current.get('discussion') || id !== app.current.get('discussion').id()) && app.pushedUpdates.indexOf(id) === -1) {
                             app.pushedUpdates.push(id);
 
-                            if (app.current instanceof IndexPage) {
+                            if (app.current.matches(IndexPage)) {
                                 app.setTitleCount(app.pushedUpdates.length);
                             }
 
@@ -116,7 +116,7 @@ app.initializers.add('kyrne-websocket', () => {
             app.pushedUpdates.splice(index, 1);
         }
 
-        if (app.current instanceof IndexPage) {
+        if (app.current.matches(IndexPage)) {
             app.setTitleCount(app.pushedUpdates.length);
         }
 
