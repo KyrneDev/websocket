@@ -7,9 +7,8 @@ import Button from 'flarum/components/Button';
 import Pusher from 'pusher-js';
 
 app.initializers.add('kyrne-websocket', () => {
-    const loadPusher = m.deferred();
 
-    const instantiatePusher = () => {
+    app.pusher = new Promise(resolve => {
         if (app.socketStatus !== 'connected') {
             if (app.forum.attribute('debug')) {
                 Pusher.logToConsole = true;
@@ -33,28 +32,21 @@ app.initializers.add('kyrne-websocket', () => {
 
             socket.connection.bind('state_change', (state) => app.socketStatus = state.current);
 
-            loadPusher.resolve({
+            return resolve({
                 main: socket.subscribe('public'),
                 user: app.session.user ? socket.subscribe('private-user' + app.session.user.id()) : null
             });
-
-            return loadPusher;
         }
-    }
+    });
 
-    app.pusher = loadPusher.promise;
     app.pushedUpdates = [];
 
-    extend(DiscussionList.prototype, 'config', function (x, isInitialized, context) {
-        if (isInitialized) return;
-
-        instantiatePusher();
-
+    extend(DiscussionList.prototype, 'oncreate', function (vnode) {
         app.pusher.then(channels => {
             Object.keys(channels).map((channel) => {
                 if (channels[channel] === null) return;
                 channels[channel].bind('newPost', data => {
-                    const params = this.props.params;
+                    const params = this.attrs.params;
 
                     if (!params.q && !params.sort && !params.filter) {
                         if (params.tags) {
@@ -77,12 +69,14 @@ app.initializers.add('kyrne-websocket', () => {
                     }
                 });
             });
+        });
+    });
 
-            extend(context, 'onunload', () => {
-                Object.keys(channels).map((channel) => {
-                    if (channels[channel] === null) return;
-                    channels[channel].unbind('newPost')
-                });
+    extend(DiscussionList.prototype, 'onremove', function (vnode) {
+        app.pusher.then(channels => {
+            Object.keys(channels).map((channel) => {
+                if (channels[channel] === null) return;
+                channels[channel].unbind('newPost');
             });
         });
     });
@@ -105,8 +99,7 @@ app.initializers.add('kyrne-websocket', () => {
                             this.loadingUpdated = true;
                         },
                         loading: this.loadingUpdated,
-                        children: app.translator.transChoice('kyrne-websocket.forum.discussion_list.show_updates_text', count, {count})
-                    })
+                    }, app.translator.transChoice('kyrne-websocket.forum.discussion_list.show_updates_text', count, { count }))
                 );
             }
         }
@@ -130,11 +123,7 @@ app.initializers.add('kyrne-websocket', () => {
         m.redraw();
     });
 
-    extend(DiscussionPage.prototype, 'config', function (x, isInitialized, context) {
-        if (isInitialized) return;
-
-        instantiatePusher();
-
+    extend(DiscussionPage.prototype, 'oncreate', function () {
         app.pusher.then(channels => {
             Object.keys(channels).map((channel) => {
                 if (channels[channel] === null) return;
@@ -156,15 +145,17 @@ app.initializers.add('kyrne-websocket', () => {
                     }
                 });
             });
-
-            extend(context, 'onunload', () => {
-                Object.keys(channels).map((channel) => {
-                    if (channels[channel] === null) return;
-                    channels[channel].unbind('newPost');
-                });
-            });
         });
     });
+
+    extend(DiscussionPage.prototype, 'onremove', function () {
+        app.pusher.then(channels => {
+            Object.keys(channels).map((channel) => {
+                if (channels[channel] === null) return;
+                channels[channel].unbind('newPost');
+            });
+        });
+    })
 
     extend(IndexPage.prototype, 'actionItems', items => {
         items.remove('refresh');
@@ -177,7 +168,7 @@ app.initializers.add('kyrne-websocket', () => {
                     unreadNotificationCount: app.session.user.unreadNotificationCount() + 1,
                     newNotificationCount: app.session.user.newNotificationCount() + 1
                 });
-                delete app.cache.notifications;
+                app.notifications.clear();
                 m.redraw();
             });
         }

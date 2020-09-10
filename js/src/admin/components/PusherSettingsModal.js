@@ -48,7 +48,7 @@ export default class PusherSettingsModal extends SettingsModal {
             </div>,
 
             <div className="Form-group">
-                <BooleanItem key={'kyrne-websocket.reverse_proxy'} cast={Number}>
+                <BooleanItem setting={this.setting} name={'kyrne-websocket.reverse_proxy'} cast={Number}>
                     <label>{app.translator.trans('kyrne-websocket.admin.pusher_settings.reverse_proxy')}</label>
                 </BooleanItem>
                 <div className='helpText'>{app.translator.trans('kyrne-websocket.admin.help.reverse_proxy')}</div>
@@ -72,14 +72,14 @@ export default class PusherSettingsModal extends SettingsModal {
             </div>,
 
             <div className="Form-group">
-                <BooleanItem key={'kyrne-websocket.cert_self_signed'} cast={Number}>
+                <BooleanItem setting={this.setting} name={'kyrne-websocket.cert_self_signed'} cast={Number}>
                     <label>{app.translator.trans('kyrne-websocket.admin.pusher_settings.cert_self_signed')}</label>
                 </BooleanItem>
                 <div className='helpText'>{app.translator.trans('kyrne-websocket.admin.help.self_signed')}</div>
             </div>,
 
             <div className="Form-group">
-                <BooleanItem key={'kyrne-websocket.force_secure'} cast={Number}>
+                <BooleanItem setting={this.setting} name={'kyrne-websocket.force_secure'} cast={Number}>
                     <label>{app.translator.trans('kyrne-websocket.admin.pusher_settings.secure')}</label>
                 </BooleanItem>
                 <div className='helpText'>{app.translator.trans('kyrne-websocket.admin.help.secure')}</div>
