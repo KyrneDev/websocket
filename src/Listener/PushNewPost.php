@@ -59,10 +59,12 @@ class PushNewPost
 
         if (count($channels)) {
             foreach (array_chunk($channels, 99) as $channelChunk) {
+                $tags = $event->post->discussion->tags;
+
                 $this->pusher->trigger($channelChunk, 'newPost', [
                     'postId'       => $event->post->id,
                     'discussionId' => $event->post->discussion->id,
-                    'tagIds'       => $event->post->discussion->tags()->pluck('id')
+                    'tagIds'       => $tags ? $tags->pluck('id') : null
                 ]);
             }
         }
