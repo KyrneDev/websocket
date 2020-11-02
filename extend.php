@@ -5,15 +5,19 @@ namespace Kyrne\Websocket;
 use Flarum\Api\Event\Serializing;
 use Flarum\Extend\Frontend;
 use Flarum\Extend\Routes;
+use Flarum\Extend\Compat;
+use Flarum\Extend\Console;
 use Flarum\Extend\Locales;
+use Flarum\Foundation\Application;
 use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
 use FoF\Components\Extend\AddFofComponents;
 use Kyrne\ExtCore\Extend\AddKyrneCore;
+use Kyrne\Websocket\Provider\AppProvider;
 
 return [
-    new Extend\Provider(Provider\AppProvider::class),
-    new Extend\Command(Commands\WebsocketServer::class),
+    (new Console)
+        ->command(Commands\WebsocketServer::class),
 
     new Extend\GenerateApp(),
     new AddFofComponents(),
@@ -35,4 +39,7 @@ return [
 
     (new Routes('api'))
         ->post('/websocket/auth', 'websocket.auth', Api\Controller\AuthController::class),
+    new Compat(function(Application $app) {
+        $app->register(AppProvider::class);
+    }),
 ];

@@ -13,10 +13,10 @@
 namespace Kyrne\Websocket\WebSockets;
 
 
-use BeyondCode\LaravelWebSockets\HttpApi\Controllers\TriggerEventController;
+use BeyondCode\LaravelWebSockets\API\TriggerEvent;
 use Illuminate\Http\Request;
 
-class TriggerBroadcastController extends TriggerEventController
+class TriggerBroadcastController extends TriggerEvent
 {
     public function __invoke(Request $request)
     {
@@ -25,11 +25,11 @@ class TriggerBroadcastController extends TriggerEventController
         foreach ($request->json()->get('channels', []) as $channelName) {
             $channel = $this->channelManager->find($request->appId, $channelName);
 
-            optional($channel)->broadcastToEveryoneExcept([
+            optional($channel)->broadcastToEveryoneExcept((object) [
                 'channel' => $channelName,
                 'event' => $request->json()->get('name'),
                 'data' => $request->json()->get('data'),
-            ], $request->json()->get('socket_id'));
+            ], $request->json()->get('socket_id'), app('flarum.settings')->get('kyrne-websocket.app_id'));
 
         }
 

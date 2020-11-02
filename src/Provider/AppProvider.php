@@ -13,11 +13,10 @@
 namespace Kyrne\Websocket\Provider;
 
 use BeyondCode\LaravelWebSockets\Apps\App;
-use BeyondCode\LaravelWebSockets\Apps\AppProvider as Contract;
+use BeyondCode\LaravelWebSockets\Contracts\AppManager as Contract;
 use BeyondCode\LaravelWebSockets\Server\Logger\WebsocketsLogger;
 use BeyondCode\LaravelWebSockets\Server\Router;
-use BeyondCode\LaravelWebSockets\WebSockets\Channels\ChannelManager;
-use BeyondCode\LaravelWebSockets\WebSockets\Channels\ChannelManagers\ArrayChannelManager;
+use Flarum\Foundation\Config;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Arr;
@@ -42,11 +41,6 @@ class AppProvider extends ServiceProvider
     {
         $this->app->singleton('websockets.router', function () {
             return new Router();
-        });
-
-        $this->app->singleton(ChannelManager::class, function () {
-            return config('websockets.channel_manager') !== null && class_exists(config('websockets.channel_manager'))
-                ? app(config('websockets.channel_manager')) : new ArrayChannelManager();
         });
 
         $this->app->bind(Contract::class, function () {
@@ -96,7 +90,7 @@ class AppProvider extends ServiceProvider
                     return null;
                 }
 
-                public function findByKey(string $appKey): ?App
+                public function findByKey($appKey): ?App
                 {
                     if ($appKey === optional($this->first())->key) {
                         return $this->first();
@@ -105,7 +99,7 @@ class AppProvider extends ServiceProvider
                     return null;
                 }
 
-                public function findBySecret(string $appSecret): ?App
+                public function findBySecret($appSecret): ?App
                 {
                     if ($appSecret === optional($this->first())->secret) {
                         return $this->first();
@@ -127,7 +121,7 @@ class AppProvider extends ServiceProvider
         }
 
         if (!$config->has('app.debug')) {
-            $config->set('app.debug', app()->config('debug'));
+            $config->set('app.debug', app(Config::class)->inDebugMode());
         }
 
         $settings = app('flarum.settings');
@@ -168,7 +162,11 @@ class AppProvider extends ServiceProvider
                 $encrypted = false;
             }
 
-            $options['debug'] = $this->app->inDebugMode();
+            if ($host === $parsedUrl['host']) {
+                $host = '127.0.0.1';
+            }
+
+            $options['debug'] = app(Config::class)->inDebugMode();
 
             if ($cluster = $settings->get('kyrne-websocket.app_cluster')) {
                 $options['cluster'] = $cluster;
@@ -188,7 +186,7 @@ class AppProvider extends ServiceProvider
                 $port
             );
 
-            if ($this->app->inDebugMode()) {
+            if (app(Config::class)->inDebugMode()) {
                 $pusher->setLogger(app('log'));
             }
 

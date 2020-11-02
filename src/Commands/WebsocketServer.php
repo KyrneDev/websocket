@@ -12,16 +12,19 @@
 
 namespace Kyrne\Websocket\Commands;
 
-use BeyondCode\LaravelWebSockets\Console\StartWebSocketServer;
-use BeyondCode\LaravelWebSockets\HttpApi\Controllers\FetchChannelController;
-use BeyondCode\LaravelWebSockets\HttpApi\Controllers\FetchChannelsController;
-use BeyondCode\LaravelWebSockets\HttpApi\Controllers\FetchUsersController;
-use BeyondCode\LaravelWebSockets\Server\WebSocketServerFactory;
+use BeyondCode\LaravelWebSockets\Console\Commands\StartServer;
+use BeyondCode\LaravelWebSockets\API\FetchChannel;
+use BeyondCode\LaravelWebSockets\API\FetchChannels;
+use BeyondCode\LaravelWebSockets\API\FetchUsers;
+use BeyondCode\LaravelWebSockets\ServerFactory;
+use Illuminate\Support\Str;
+use BeyondCode\LaravelWebSockets\Contracts\ChannelManager;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Kyrne\Websocket\Channels\Managers\LocalChannelManager;
 use Kyrne\Websocket\WebSockets\SocketHandler;
 use Kyrne\Websocket\WebSockets\TriggerBroadcastController;
 
-class WebsocketServer extends StartWebsocketServer
+class WebsocketServer extends StartServer
 {
 
     protected function registerEchoRoutes()
@@ -30,9 +33,9 @@ class WebsocketServer extends StartWebsocketServer
 
         $router->get('/app/{appKey}', SocketHandler::class);
         $router->post('/apps/{appId}/events', TriggerBroadcastController::class);
-        $router->get('/apps/{appId}/channels', FetchChannelsController::class);
-        $router->get('/apps/{appId}/channels/{channelName}', FetchChannelController::class);
-        $router->get('/apps/{appId}/channels/{channelName}/users', FetchUsersController::class);
+        $router->get('/apps/{appId}/channels', FetchChannels::class);
+        $router->get('/apps/{appId}/channels/{channelName}', FetchChannel::class);
+        $router->get('/apps/{appId}/channels/{channelName}/users', FetchUsers::class);
 
         return $this;
     }
@@ -69,13 +72,16 @@ class WebsocketServer extends StartWebsocketServer
 
         $this->info("Selecting $host:$port.");
 
-        $this
-            ->configureHttpLogger()
-            ->configureMessageLogger()
-            ->configureConnectionLogger()
-            ->registerEchoRoutes()
-            ->registerCustomRoutes()
-            ->startWebSocketServer();
+
+        $this->configureLoggers();
+
+        $this->configureManagers();
+
+        $this->registerEchoRoutes();
+
+        $this->configurePongTracker();
+
+        $this->startServer();
     }
 
     public function registerCustomRoutes()
@@ -83,18 +89,32 @@ class WebsocketServer extends StartWebsocketServer
         return $this;
     }
 
-    protected function startWebSocketServer()
+    protected function configureManagers()
     {
-        $this->info("Starting the WebSocket server on port {$this->option('port')}...");
+        app()->singleton(ChannelManager::class, function () {
+            return new LocalChannelManager($this->loop);
+        });
+    }
 
-        /* 🛰 Start the server 🛰  */
-        (new WebSocketServerFactory())
+    /**
+     * Build the server instance.
+     *
+     * @return void
+     */
+    protected function buildServer()
+    {
+        $this->server = new ServerFactory(
+            $this->option('host'), $this->option('port')
+        );
+
+        if ($loop = $this->option('loop')) {
+            $this->loop = $loop;
+        }
+
+        $this->server = $this->server
             ->setLoop($this->loop)
-            ->useRoutes(app('websockets.router')->getRoutes())
-            ->setHost($this->option('host'))
-            ->setPort($this->option('port'))
+            ->withRoutes(app('websockets.router')->getRoutes())
             ->setConsoleOutput($this->output)
-            ->createServer()
-            ->run();
+            ->createServer();
     }
 }

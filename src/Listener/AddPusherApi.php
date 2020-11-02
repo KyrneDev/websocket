@@ -13,7 +13,7 @@
 namespace Kyrne\Websocket\Listener;
 
 use BeyondCode\LaravelWebSockets\Apps\App;
-use BeyondCode\LaravelWebSockets\Apps\AppProvider;
+use BeyondCode\LaravelWebSockets\Contracts\AppManager;
 use Flarum\Api\Event\Serializing;
 use Flarum\Api\Serializer\ForumSerializer;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -37,7 +37,7 @@ class AddPusherApi
     {
         if ($event->isSerializer(ForumSerializer::class)) {
             /** @var AppProvider $provider */
-            $provider = app(AppProvider::class);
+            $provider = app(AppManager::class);
             /** @var App $app */
             $app = optional($provider->first());
             $settings = app('flarum.settings');
@@ -47,6 +47,7 @@ class AddPusherApi
             $event->attributes['websocketKey'] = $app->key;
             $event->attributes['websocketHost'] = $app->host;
             $event->attributes['websocketPort'] = $app->port ?? $this->settings->get('kyrne-websocket.app_port') ?? 6001;
+            $event->attributes['websocketAuthOnly'] = (bool) $settings->get('kyrne-websocket.auth_only');
         }
     }
 }

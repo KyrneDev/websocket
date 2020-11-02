@@ -25,10 +25,10 @@
         "source": "https://github.com/kyrne/flarum-ext-websocket"
     },
     "require": {
-        "flarum/core": "^0.1.0-beta.14",
-        "beyondcode/laravel-websockets": "1.3",
+        "flarum/core": "^0.1.0-beta.14.1",
+        "beyondcode/laravel-websockets": "~2.0.0",
         "fof/components": ">=0.1.1",
-        "kyrne/ext-core": "*@dev"
+        "kyrne/ext-core": "0.1.2"
     },
     "autoload": {
         "psr-4": {
