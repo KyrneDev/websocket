@@ -11,8 +11,6 @@ use Flarum\Extend\Locales;
 use Flarum\Foundation\Application;
 use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
-use FoF\Components\Extend\AddFofComponents;
-use Kyrne\ExtCore\Extend\AddKyrneCore;
 use Kyrne\Websocket\Provider\AppProvider;
 
 return [
@@ -20,8 +18,6 @@ return [
         ->command(Commands\WebsocketServer::class),
 
     new Extend\GenerateApp(),
-    new AddFofComponents(),
-    new AddKyrneCore(),
 
     (new Extend\Listen)
         ->on(Serializing::class, Listener\AddPusherApi::class)

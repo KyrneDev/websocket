@@ -1,7 +1,11 @@
 import app from 'flarum/app';
 
-import PusherSettingsModal from './components/PusherSettingsModal';
+import WebsocketPage from './components/WebsocketPage';
 
 app.initializers.add('kyrne-websocket', app => {
-  app.extensionSettings['kyrne-websocket'] = () => app.modal.show(PusherSettingsModal);
+
+  app.extensionData
+    .for('kyrne-websocket')
+    .registerPage(WebsocketPage);
 });
+
