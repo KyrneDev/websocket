@@ -41,7 +41,7 @@ export default class WebsocketPage extends ExtensionPage {
 
             <div className="Form-group">
               <Switch
-                state={!!this.setting('kyrne-websocket.reverse_proxy') && this.setting('kyrne-websocket.reverse_proxy') !== '0'}
+                state={!!this.setting('kyrne-websocket.reverse_proxy')() && this.setting('kyrne-websocket.reverse_proxy')() !== '0'}
                 onchange={this.settings['kyrne-websocket.reverse_proxy']}>
                 {app.translator.trans('kyrne-websocket.admin.pusher_settings.reverse_proxy')}
               </Switch>
@@ -69,7 +69,7 @@ export default class WebsocketPage extends ExtensionPage {
 
             <div className="Form-group">
               <Switch
-                state={!!this.setting('kyrne-websocket.cert_self_signed') && this.setting('kyrne-websocket.cert_self_signed') !== '0'}
+                state={!!this.setting('kyrne-websocket.cert_self_signed')() && this.setting('kyrne-websocket.cert_self_signed')() !== '0'}
                 onchange={this.settings['kyrne-websocket.cert_self_signed']}>
                 {app.translator.trans('kyrne-websocket.admin.pusher_settings.cert_self_signed')}
               </Switch>
@@ -78,7 +78,7 @@ export default class WebsocketPage extends ExtensionPage {
 
             <div className="Form-group">
               <Switch
-                state={!!this.setting('kyrne-websocket.force_secure') && this.setting('kyrne-websocket.force_secure') !== '0'}
+                state={!!this.setting('kyrne-websocket.force_secure')() && this.setting('kyrne-websocket.force_secure')() !== '0'}
                 onchange={this.settings['kyrne-websocket.force_secure']}>
                 {app.translator.trans('kyrne-websocket.admin.pusher_settings.secure')}
               </Switch>
@@ -86,12 +86,13 @@ export default class WebsocketPage extends ExtensionPage {
             </div>
             <div className="Form-group">
               <Switch
-                state={!!this.setting('kyrne-websocket.auth_only') && this.setting('kyrne-websocket.auth_only') !== '0'}
+                state={!!this.setting('kyrne-websocket.auth_only')() && this.setting('kyrne-websocket.auth_only')() !== '0'}
                 onchange={this.settings['kyrne-websocket.auth_only']}>
                 {app.translator.trans('kyrne-websocket.admin.pusher_settings.auth_only')}
               </Switch>
               <div className='helpText'>{app.translator.trans('kyrne-websocket.admin.help.auth_only')}</div>
             </div>
+            <div className="Form-group">{this.submitButton()}</div>
           </div>
         </div>
       </div>

@@ -1,0 +1,33 @@
+.kyrne-websocket-Page {
+  .ExtensionPage-header {
+    background: linear-gradient(135deg, rgba(2, 0, 36, 0.4) 0%, rgba(224, 64, 251, 0.4) 0%, rgba(33, 150, 243, 0.4) 100%);
+    background-size: 200% 200%;
+    animation: gradient 10s ease infinite;
+  }
+}
+
+#admin-navigation {
+  > .Dropdown {
+    > .Dropdown-menu {
+      > .item-extension-kyrne-websocket.active {
+        > .ExtensionNavButton {
+          background: linear-gradient(135deg, rgba(2, 0, 36, 0.4) 0%, rgba(224, 64, 251, 0.4) 0%, rgba(33, 150, 243, 0.4) 100%);
+          background-size: 200% 200%;
+          animation: gradient 10s ease infinite;
+        }
+      }
+    }
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

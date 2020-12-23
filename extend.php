@@ -29,7 +29,8 @@ return [
         ->css(__DIR__.'/less/forum.less'),
 
     (new Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js'),
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/less/admin.less'),
 
     new Locales(__DIR__.'/resources/locale'),
 
