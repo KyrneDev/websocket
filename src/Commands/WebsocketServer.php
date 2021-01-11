@@ -70,6 +70,15 @@ class WebsocketServer extends StartServer
             $host = $this->supersedeOption('host')
         );
 
+        $setting = app('flarum.settings');
+        $pk = $setting->get('kyrne-websocket.local_pk');
+        $cert = $setting->get('kyrne-websocket.local_cert');
+
+        if ((!is_readable($cert) || !is_readable($pk)) && $pk && $cert) {
+            $this->error('Cannot access local certificate/passkey!');
+            return;
+        }
+
         $this->info("Selecting $host:$port.");
 
 

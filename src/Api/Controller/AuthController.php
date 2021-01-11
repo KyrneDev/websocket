@@ -50,6 +50,19 @@ class AuthController implements RequestHandlerInterface
             $payload = json_decode($pusher->socket_auth($userChannel, Arr::get($body, 'socket_id')), true);
 
             return new JsonResponse($payload);
+        } else if (strpos(Arr::get($body, 'channel_name'), 'private-loginId') !== false) {
+            $pusher = new Pusher(
+                $this->settings->get('kyrne-websocket.app_key'),
+                $this->settings->get('kyrne-websocket.app_secret'),
+                $this->settings->get('kyrne-websocket.app_id'),
+                [],
+                $this->settings->get('kyrne-websocket.app_host'),
+                $this->settings->get('kyrne-websocket.app_port')
+            );
+
+            $payload = json_decode($pusher->socket_auth(Arr::get($body, 'channel_name'), Arr::get($body, 'socket_id')), true);
+
+            return new JsonResponse($payload);
         }
 
         return new EmptyResponse(403);
