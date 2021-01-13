@@ -162,7 +162,7 @@ class AppProvider extends ServiceProvider
                 $encrypted = false;
             }
 
-            if ($host === $parsedUrl['host']) {
+            if ($host === $parsedUrl['host'] && !$settings->get('kyrne-websocket.local_cert') && !$settings->get('kyrne-websocket.local_pk')) {
                 $host = '127.0.0.1';
             }
 

@@ -46,11 +46,10 @@ class PushNewPost
                 return;
             }
 
-
             foreach ($response->channels as $name => $channel) {
                 $userId = Str::after($name, 'private-user');
 
-                if ($userId !== strval($event->post->user->id) && ($user = User::find($userId)) && $event->post->isVisibleTo($user)) {
+                if (($user = User::find($userId)) && $event->post->isVisibleTo($user)) {
 
                     $channels[] = $name;
                 }

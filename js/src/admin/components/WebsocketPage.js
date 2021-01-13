@@ -86,6 +86,14 @@ export default class WebsocketPage extends ExtensionPage {
             </div>
             <div className="Form-group">
               <Switch
+                state={!!this.setting('kyrne-websocket.auto_update')() && this.setting('kyrne-websocket.auto_update')() !== '0'}
+                onchange={this.settings['kyrne-websocket.auto_update']}>
+                {app.translator.trans('kyrne-websocket.admin.pusher_settings.auto_update')}
+              </Switch>
+              <div className='helpText'>{app.translator.trans('kyrne-websocket.admin.help.auto_update')}</div>
+            </div>
+            <div className="Form-group">
+              <Switch
                 state={!!this.setting('kyrne-websocket.auth_only')() && this.setting('kyrne-websocket.auth_only')() !== '0'}
                 onchange={this.settings['kyrne-websocket.auth_only']}>
                 {app.translator.trans('kyrne-websocket.admin.pusher_settings.auth_only')}

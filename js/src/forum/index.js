@@ -63,13 +63,27 @@ app.initializers.add('kyrne-websocket', () => {
             const id = String(data.discussionId);
 
             if ((!app.current.get('discussion') || id !== app.current.get('discussion').id()) && app.pushedUpdates.indexOf(id) === -1) {
-              app.pushedUpdates.push(id);
+              if (app.forum.attribute('websocketAutoUpdate')) {
+                app.store.find('discussions', id)
+                  .then(discussion => {
+                    this.attrs.state.removeDiscussion(discussion);
+                    this.attrs.state.addDiscussion(discussion);
 
-              if (app.current.matches(IndexPage)) {
-                app.setTitleCount(app.pushedUpdates.length);
+                    if (!document.hasFocus()) {
+                      app.setTitleCount(app.titleCount + 1);
+
+                      $(window).one('focus', () => app.setTitleCount(0));
+                    }
+                  });
+              } else {
+                app.pushedUpdates.push(id);
+
+                if (app.current.matches(IndexPage)) {
+                  app.setTitleCount(app.pushedUpdates.length);
+                }
+
+                m.redraw();
               }
-
-              m.redraw();
             }
           }
         });
@@ -90,23 +104,24 @@ app.initializers.add('kyrne-websocket', () => {
     if (app.pushedUpdates) {
       const count = app.pushedUpdates.length;
 
+
       if (count) {
-        vdom.children.unshift(
-          Button.component({
-            className: 'Button Button--block DiscussionList-update',
-            onclick: () => {
-              this.attrs.state.refresh(false).then(() => {
-                this.loadingUpdated = false;
-                app.pushedUpdates = [];
-                app.setTitleCount(0);
-                m.redraw();
-              });
-              this.loadingUpdated = true;
-            },
-            loading: this.loadingUpdated,
-          }, app.translator.transChoice('kyrne-websocket.forum.discussion_list.show_updates_text', count, {count}))
-        );
-      }
+          vdom.children.unshift(
+            Button.component({
+              className: 'Button Button--block DiscussionList-update',
+              onclick: () => {
+                this.attrs.state.refresh(false).then(() => {
+                  this.loadingUpdated = false;
+                  app.pushedUpdates = [];
+                  app.setTitleCount(0);
+                  m.redraw();
+                });
+                this.loadingUpdated = true;
+              },
+              loading: this.loadingUpdated,
+            }, app.translator.transChoice('kyrne-websocket.forum.discussion_list.show_updates_text', count, {count}))
+          );
+        }
     }
   });
 
@@ -139,15 +154,16 @@ app.initializers.add('kyrne-websocket', () => {
             const oldCount = this.discussion.commentCount();
 
             app.store.find('discussions', this.discussion.id()).then(() => {
-              this.stream.update();
+              this.stream.update()
+                .then(() => {
+                  if (!document.hasFocus()) {
+                    app.setTitleCount(Math.max(0, this.discussion.commentCount() - oldCount));
 
-              m.redraw();
+                    $(window).one('focus', () => app.setTitleCount(0));
+                  }
 
-              if (!document.hasFocus()) {
-                app.setTitleCount(Math.max(0, this.discussion.commentCount() - oldCount));
-
-                $(window).one('focus', () => app.setTitleCount(0));
-              }
+                  m.redraw();
+                })
             });
           }
         });

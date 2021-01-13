@@ -23,6 +23,7 @@ kyrne-websocket:
             app_port_label: Port
             app_host_label: Host
             app_id_label: App ID
+            auto_update: Auto Update Discussions
             app_key_label: App Key
             app_secret_label: App Secret
             secure: Force wss/https for Websocket
@@ -32,6 +33,7 @@ kyrne-websocket:
 
       # These translations are used in the Websockets Settings modal dialog for help texts.
         help:
+            auto_update: Don't show the yellow update banner, immediately update the discussion list.
             app_id: Pusher App ID - leave as is if using built-in websocket server.
             app_key: Pusher App Key - leave as is if using built-in websocket server.
             secret: Pusher App Secret - leave as is if using built-in websocket server.

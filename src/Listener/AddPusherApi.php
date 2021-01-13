@@ -48,6 +48,7 @@ class AddPusherApi
             $event->attributes['websocketHost'] = $app->host;
             $event->attributes['websocketPort'] = $app->port ?? $this->settings->get('kyrne-websocket.app_port') ?? 6001;
             $event->attributes['websocketAuthOnly'] = (bool) $settings->get('kyrne-websocket.auth_only');
+            $event->attributes['websocketAutoUpdate'] = (bool) $settings->get('kyrne-websocket.auto_update');
         }
     }
 }
