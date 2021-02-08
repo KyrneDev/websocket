@@ -20,12 +20,15 @@ class AltServer extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setName('websocket:alt')
-            ->setDescription('Run Alternate Websocket Server');
+            ->setName('websocket:beta')
+            ->setDescription('Run Beta Websocket Server');
     }
 
     public function fire()
     {
+        $this->error('Warning: This implementation of the websocket server is in beta, you may encounter errors.');
+        $this->info('Attempting to start Poxa - this may take a few seconds...');
+
         $setting = app('flarum.settings');
 
         $id = $setting->get('kyrne-websocket.app_id') . " ";
