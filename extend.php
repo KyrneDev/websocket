@@ -8,6 +8,8 @@ use Flarum\Extend\Routes;
 use Flarum\Extend\Compat;
 use Flarum\Extend\Console;
 use Flarum\Extend\Locales;
+
+use Flarum\Extend\Settings;
 use Flarum\Foundation\Application;
 use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
@@ -15,12 +17,21 @@ use Kyrne\Websocket\Provider\AppProvider;
 
 return [
     (new Console)
-        ->command(Commands\WebsocketServer::class),
+        ->command(Commands\WebsocketServer::class)
+        ->command(Commands\AltServer::class),
 
     new Extend\GenerateApp(),
 
+    (new Settings())
+        ->serializeToForum('websocketSecure', 'kyrne-websocket.force_secure', function($setting) {return boolval($setting);})
+        ->serializeToForum('websocketReverseProxy', 'kyrne-websocket.reverse_proxy')
+        ->serializeToForum('websocketPort', 'kyrne-websocket.app_port')
+        ->serializeToForum('websocketAutoUpdate', 'kyrne-websocket.auto_update')
+        ->serializeToForum('websocketKey', 'kyrne-websocket.app_key')
+        ->serializeToForum('websocketHost', 'kyrne-websocket.app_host')
+        ->serializeToForum('websocketAuthOnly', 'kyrne-websocket.auth_only'),
+
     (new Extend\Listen)
-        ->on(Serializing::class, Listener\AddPusherApi::class)
         ->on(Posted::class, Listener\PushNewPost::class)
         ->on(Sending::class, Listener\PushNewNotification::class),
 

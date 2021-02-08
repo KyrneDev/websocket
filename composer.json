@@ -21,7 +21,6 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/kyrne/flarum-ext-websocket/issues",
         "forum":  "https://discuss.flarum.org/d/23473-websockets-locally-hosted-alternative-for-pusher",
         "docs": "https://extiverse.com/extension/kyrne/websocket"
     },

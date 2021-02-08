@@ -16,7 +16,7 @@ app.initializers.add('kyrne-websocket', () => {
         if (app.forum.attribute('debug')) {
           Pusher.logToConsole = true;
         }
-        let wssPort = app.forum.attribute('websocketReverseProxy') ? 443 : app.forum.attribute('websocketPort') || 2083;
+        let wssPort = app.forum.attribute('websocketReverseProxy') === '1' ? 443 : app.forum.attribute('websocketPort') || 2083;
         const socket = new Pusher(app.forum.attribute('websocketKey'), {
           authEndpoint: app.forum.attribute('apiUrl') + '/websocket/auth',
           cluster: null,
@@ -30,6 +30,7 @@ app.initializers.add('kyrne-websocket', () => {
               'X-CSRF-Token': app.session.csrfToken
             }
           },
+          enabledTransports: ["ws", "flash"],
           disabledTransports: ['xhr_polling', 'xhr_streaming', 'sockjs']
         });
 

@@ -44,8 +44,7 @@ class AppProvider extends ServiceProvider
         });
 
         $this->app->bind(Contract::class, function () {
-            return new class implements Contract
-            {
+            return new class implements Contract {
                 protected $apps = [];
 
                 public function __construct()
@@ -157,7 +156,7 @@ class AppProvider extends ServiceProvider
 
             $host = empty($settings->get('kyrne-websocket.app_host')) ? $parsedUrl['host'] : $settings->get('kyrne-websocket.app_host');
 
-            if ($settings->get('kyrne-websocket.reverse_proxy')) {
+            if ((bool) $settings->get('kyrne-websocket.reverse_proxy')) {
                 $host = '127.0.0.1';
                 $encrypted = false;
             }
@@ -175,6 +174,13 @@ class AppProvider extends ServiceProvider
                 $options['port'] = empty($settings->get('kyrne-websocket.app_port')) ? 2083 : $settings->get('kyrne-websocket.app_port');
                 $options['encrypted'] = $encrypted;
                 $options['scheme'] = $encrypted ? 'https' : 'http';
+            }
+
+            if ($settings->get('kyrne-websocket.cert_self_signed')) {
+                $options['curl_options'] = [
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0
+                ];
             }
 
             $pusher = new Pusher(
