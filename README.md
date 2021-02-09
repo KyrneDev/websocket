@@ -96,7 +96,6 @@ Add the following inside of your SSL server block:
 
 	location @ws {
 	    proxy_pass             http://127.0.0.1:2083;
-	    proxy_set_header Host  $host;
 	    proxy_read_timeout     60;
 	    proxy_connect_timeout  60;
 	    proxy_redirect         off;
