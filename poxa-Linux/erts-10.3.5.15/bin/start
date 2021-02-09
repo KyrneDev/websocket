@@ -25,24 +25,12 @@
 #
 # Usage: start [Data]
 #
-ROOTDIR=/root/.asdf/installs/erlang/21.3.8.20
+ROOTDIR=/home/cdk2020/.asdf/installs/erlang/21.3.8.20
 
 if [ -z "$RELDIR" ]
 then
    RELDIR=$ROOTDIR/releases
 fi
-
-echo $POXA_APP_ID
-
-echo $port
-
-export POXA_APP_ID=$1
-export POXA_APP_KEY=$2
-export POXA_SECRET=$3
-export POXA_SSL_CERTFILE=$4
-export POXA_SSL_KEYFILE=$5
-export POXA_PORT=$6
-export POXA_SSL=$7
 
 START_ERL_DATA=${1:-$RELDIR/start_erl.data}
 

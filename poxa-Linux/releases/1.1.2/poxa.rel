@@ -21,7 +21,7 @@
           {hipe,"3.18.3",permanent},
           {httpoison,"1.8.0",permanent},
           {idna,"6.1.1",permanent},
-          {jason,"1.1.2",permanent},
+          {jason,"1.2.2",permanent},
           {logger,"1.9.4",permanent},
           {metrics,"1.0.1",permanent},
           {mimerl,"1.2.0",permanent},
