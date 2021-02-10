@@ -3,7 +3,7 @@
 .gitignore export-ignore
 .gitmodules export-ignore
 poxa-source export-ignore
-js/*/src export-ignore
+js/src/ export-ignore
 js/*/Gulfile.js
 js/*/package.json
 js/*/yarn.lock
