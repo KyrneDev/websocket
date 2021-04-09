@@ -31,12 +31,12 @@ class AltServer extends AbstractCommand
 
         $setting = app('flarum.settings');
 
-        $id = $setting->get('kyrne-websocket.app_id') . " ";
-        $key = $setting->get('kyrne-websocket.app_key') . " ";
-        $secret = $setting->get('kyrne-websocket.app_secret') . " ";
-        $port = $setting->get('kyrne-websocket.app_port') . " ";
-        $pk = $setting->get('kyrne-websocket.local_pk') . " ";
-        $cert = $setting->get('kyrne-websocket.local_cert') . " ";
+        $id = $setting->get('kyrne-websocket.app_id');
+        $key = $setting->get('kyrne-websocket.app_key');
+        $secret = $setting->get('kyrne-websocket.app_secret');
+        $port = $setting->get('kyrne-websocket.app_port');
+        $pk = $setting->get('kyrne-websocket.local_pk');
+        $cert = $setting->get('kyrne-websocket.local_cert');
 
         $ssl = false;
 
@@ -46,7 +46,7 @@ class AltServer extends AbstractCommand
 
         $ssl = (bool)$setting->get('kyrne-websocket.reverse_proxy') ? false : $ssl;
 
-        $process = new Process(__DIR__ . "/../../poxa-" . PHP_OS . "/bin/poxa.sh start " . $id . $key . $secret . $port . ($ssl ? "true " : "false ") . $cert . $pk);
+        $process = new Process([__DIR__ . "/../../poxa-" . PHP_OS . "/bin/poxa.sh", "start", $id, $key, $secret, $port, ($ssl ? "true " : "false"), $cert, $pk]);
         $process->setTimeout(0);
 
         $process->start();
