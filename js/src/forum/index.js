@@ -120,7 +120,7 @@ app.initializers.add('kyrne-websocket', () => {
                 this.loadingUpdated = true;
               },
               loading: this.loadingUpdated,
-            }, app.translator.transChoice('kyrne-websocket.forum.discussion_list.show_updates_text', count, {count}))
+            }, app.translator.trans('kyrne-websocket.forum.discussion_list.show_updates_text',{count}))
           );
         }
     }

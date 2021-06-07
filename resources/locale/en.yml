@@ -5,7 +5,7 @@ kyrne-websocket:
 
     # These translations are used in the discussion list.
         discussion_list:
-            show_updates_text: "Show {count} updated discussion|Show {count} updated discussions"
+            show_updates_text: "{count, plural, one {Show # updated discussion} other {Show # updated discussions}}"
 
     ##
     # UNIQUE KEYS - The following keys are used in only one location each.
