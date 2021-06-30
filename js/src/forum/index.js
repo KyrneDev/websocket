@@ -1,5 +1,6 @@
 import {extend} from 'flarum/extend';
 import app from 'flarum/app';
+import DiscussionListState from 'flarum/states/DiscussionListState';
 import DiscussionList from 'flarum/components/DiscussionList';
 import DiscussionPage from 'flarum/components/DiscussionPage';
 import IndexPage from 'flarum/components/IndexPage';
@@ -58,15 +59,20 @@ app.initializers.add('kyrne-websocket', () => {
             if (params.tags) {
               const tag = app.store.getBy('tags', 'slug', params.tags);
 
-              if (data.tagIds.indexOf(tag.id()) === -1) return;
+              if (data.tagIds.indexOf(Number(tag.id())) === -1) return;
             }
 
             const id = String(data.discussionId);
 
             if ((!app.current.get('discussion') || id !== app.current.get('discussion').id()) && app.pushedUpdates.indexOf(id) === -1) {
-              if (app.forum.attribute('websocketAutoUpdate')) {
-                app.store.find('discussions', id)
-                  .then(discussion => {
+              app
+                .request({
+                    method: 'GET',
+                    url: app.forum.attribute('apiUrl') + '/discussions/' + id + '?include=user',
+                  })
+                .then(payload => {
+                  if (app.forum.attribute('websocketAutoUpdate')) {
+                    const discussion = app.store.pushPayload(payload);
                     this.attrs.state.removeDiscussion(discussion);
                     this.attrs.state.addDiscussion(discussion);
 
@@ -75,16 +81,16 @@ app.initializers.add('kyrne-websocket', () => {
 
                       $(window).one('focus', () => app.setTitleCount(0));
                     }
-                  });
-              } else {
-                app.pushedUpdates.push(id);
+                  } else {
+                    app.pushedUpdates.push(payload);
 
-                if (app.current.matches(IndexPage)) {
-                  app.setTitleCount(app.pushedUpdates.length);
-                }
+                    if (app.current.matches(IndexPage)) {
+                      app.setTitleCount(app.pushedUpdates.length);
+                    }
 
-                m.redraw();
-              }
+                    m.redraw();
+                  }
+                });
             }
           }
         });
@@ -105,40 +111,51 @@ app.initializers.add('kyrne-websocket', () => {
     if (app.pushedUpdates) {
       const count = app.pushedUpdates.length;
 
+      let foundUser = false;
 
-      if (count) {
-          vdom.children.unshift(
-            Button.component({
-              className: 'Button Button--block DiscussionList-update',
-              onclick: () => {
-                this.attrs.state.refresh(false).then(() => {
-                  this.loadingUpdated = false;
-                  app.pushedUpdates = [];
-                  app.setTitleCount(0);
-                  m.redraw();
-                });
-                this.loadingUpdated = true;
-              },
-              loading: this.loadingUpdated,
-            }, app.translator.trans('kyrne-websocket.forum.discussion_list.show_updates_text',{count}))
-          );
+      app.pushedUpdates.map(payload => {
+        if (app.current.data.user && payload.included[0].id == app.current.data.user.id()) {
+          foundUser = true;
         }
+      })
+
+      const addButton = () => {
+        vdom.children.unshift(
+          Button.component({
+            className: 'Button Button--block DiscussionList-update',
+            onclick: async () => {
+              this.loadingUpdated = true;
+              await app.pushedUpdates.map((payload) => {
+                const discussion = app.store.pushPayload(payload);
+                this.attrs.state.removeDiscussion(discussion);
+                this.attrs.state.addDiscussion(discussion);
+              })
+              app.pushedUpdates = [];
+              app.setTitleCount(0);
+              m.redraw();
+              this.loadingUpdated = false;
+            },
+            loading: this.loadingUpdated,
+          }, app.translator.trans('kyrne-websocket.forum.discussion_list.show_updates_text', {count}))
+        );
+      }
+
+      if (app.current.data.user) {
+        if (foundUser) {
+          addButton();
+        }
+      } else if (count) {
+        addButton();
+      }
+
     }
   });
 
-  // Prevent any newly-created discussions from triggering the discussion list
-  // update button showing.
-  // TODO: Might be better pause the response to the push updates while the
-  // composer is loading? idk
-  extend(DiscussionList.prototype, 'addDiscussion', function (returned, discussion) {
-    const index = app.pushedUpdates.indexOf(discussion.id());
-
-    if (index !== -1) {
-      app.pushedUpdates.splice(index, 1);
-    }
+  extend(DiscussionListState.prototype, 'parseResults', function() {
+    app.pushedUpdates = [];
 
     if (app.current.matches(IndexPage)) {
-      app.setTitleCount(app.pushedUpdates.length);
+      app.setTitleCount(0);
     }
 
     m.redraw();

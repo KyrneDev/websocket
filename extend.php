@@ -28,7 +28,9 @@ return [
         })
         ->serializeToForum('websocketReverseProxy', 'kyrne-websocket.reverse_proxy')
         ->serializeToForum('websocketPort', 'kyrne-websocket.app_port')
-        ->serializeToForum('websocketAutoUpdate', 'kyrne-websocket.auto_update')
+        ->serializeToForum('websocketAutoUpdate', 'kyrne-websocket.auto_update', function ($setting) {
+            return boolval($setting);
+        })
         ->serializeToForum('websocketKey', 'kyrne-websocket.app_key')
         ->serializeToForum('websocketHost', 'kyrne-websocket.app_host')
         ->serializeToForum('websocketAuthOnly', 'kyrne-websocket.auth_only'),

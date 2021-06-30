@@ -12,6 +12,7 @@
 
 namespace Kyrne\Websocket\Api\Controller;
 
+use Flarum\Http\RequestUtil;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
@@ -34,7 +35,7 @@ class AuthController implements RequestHandlerInterface
     }
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $userChannel = 'private-user'.$request->getAttribute('actor')->id;
+        $userChannel = 'private-user'.RequestUtil::getActor($request)->id;
         $body = $request->getParsedBody();
 
         if (Arr::get($body, 'channel_name') === $userChannel) {
