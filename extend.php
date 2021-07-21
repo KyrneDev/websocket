@@ -6,14 +6,15 @@ use Flarum\Api\Event\Serializing;
 use Flarum\Extend\Frontend;
 use Flarum\Extend\Routes;
 use Flarum\Extend\Console;
+use Flarum\Extend\Notification;
 use Flarum\Extend\Locales;
 use Flarum\Extend\ServiceProvider;
 
 use Flarum\Extend\Settings;
-use Flarum\Foundation\Application;
 use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
 use Kyrne\Websocket\Provider\AppProvider;
+use Kyrne\Websocket\WebsocketNotificationDriver;
 
 return [
     (new Console)
@@ -39,7 +40,10 @@ return [
         ->on(Posted::class, Listener\PushNewPost::class)
         ->on(Sending::class, Listener\PushNewNotification::class),
 
-    (new Frontend('forum'))
+    (new Notification())
+        ->driver('pusher', WebsocketNotificationDriver::class),
+
+    (new Frontend('admin'))
         ->js(__DIR__ . '/js/dist/forum.js')
         ->css(__DIR__ . '/less/forum.less'),
 
