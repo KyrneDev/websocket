@@ -19,23 +19,18 @@ class SendWebsocketNotificationsJob extends AbstractJob
      */
     private $recipients;
 
-    /**
-     * @var Pusher
-     */
-    protected $pusher;
-
-    public function __construct(BlueprintInterface $blueprint, array $recipients, Pusher $pusher)
+    public function __construct(BlueprintInterface $blueprint, array $recipient)
     {
         $this->blueprint = $blueprint;
         $this->recipients = $recipients;
-        $this->pusher = $pusher;
     }
 
     public function handle()
     {
+        $pusher = app(Pusher::class);
         foreach ($this->recipients as $user) {
             if ($user->shouldAlert($this->blueprint::getType())) {
-                $this->pusher->trigger('private-user'.$user->id, 'notification', null);
+                $pusher->trigger('private-user'.$user->id, 'notification', null);
             }
         }
     }
