@@ -9,19 +9,21 @@ use Flarum\Extend\Console;
 use Flarum\Extend\Notification;
 use Flarum\Extend\Locales;
 use Flarum\Extend\ServiceProvider;
+use Flarum\Extend\Event;
 
 use Flarum\Extend\Settings;
 use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
 use Kyrne\Websocket\Provider\AppProvider;
 use Kyrne\Websocket\WebsocketNotificationDriver;
+use Kyrne\Websocket\Extend\GenerateApp;
 
 return [
     (new Console)
         ->command(Commands\WebsocketServer::class)
         ->command(Commands\AltServer::class),
 
-    new Extend\GenerateApp(),
+    new GenerateApp(),
 
     (new Settings())
         ->serializeToForum('websocketSecure', 'kyrne-websocket.force_secure', function ($setting) {
@@ -36,9 +38,9 @@ return [
         ->serializeToForum('websocketHost', 'kyrne-websocket.app_host')
         ->serializeToForum('websocketAuthOnly', 'kyrne-websocket.auth_only'),
 
-    (new Extend\Listen)
-        ->on(Posted::class, Listener\PushNewPost::class)
-        ->on(Sending::class, Listener\PushNewNotification::class),
+    (new Event())
+        ->listen(Posted::class, Listener\PushNewPost::class)
+        ->listen(Sending::class, Listener\PushNewNotification::class),
 
     (new Notification())
         ->driver('pusher', WebsocketNotificationDriver::class),
