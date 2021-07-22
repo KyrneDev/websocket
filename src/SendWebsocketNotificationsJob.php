@@ -19,7 +19,7 @@ class SendWebsocketNotificationsJob extends AbstractJob
      */
     private $recipients;
 
-    public function __construct(BlueprintInterface $blueprint, array $recipient)
+    public function __construct(BlueprintInterface $blueprint, array $recipients)
     {
         $this->blueprint = $blueprint;
         $this->recipients = $recipients;

@@ -43,7 +43,7 @@ return [
         ->listen(Sending::class, Listener\PushNewNotification::class),
 
     (new Notification())
-        ->driver('pusher', WebsocketNotificationDriver::class),
+        ->driver('websocket', WebsocketNotificationDriver::class),
 
     (new Frontend('forum'))
         ->js(__DIR__ . '/js/dist/forum.js')
