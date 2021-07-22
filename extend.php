@@ -36,11 +36,12 @@ return [
         })
         ->serializeToForum('websocketKey', 'kyrne-websocket.app_key')
         ->serializeToForum('websocketHost', 'kyrne-websocket.app_host')
-        ->serializeToForum('websocketAuthOnly', 'kyrne-websocket.auth_only'),
+        ->serializeToForum('websocketAuthOnly', 'kyrne-websocket.auth_only', function ($setting) {
+            return boolval($setting);
+        }),
 
     (new Event())
-        ->listen(Posted::class, Listener\PushNewPost::class)
-        ->listen(Sending::class, Listener\PushNewNotification::class),
+        ->listen(Posted::class, Listener\PushNewPost::class),
 
     (new Notification())
         ->driver('websocket', WebsocketNotificationDriver::class),
