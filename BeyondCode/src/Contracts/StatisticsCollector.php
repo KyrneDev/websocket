@@ -9,7 +9,8 @@ interface StatisticsCollector
     /**
      * Handle the incoming websocket message.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function webSocketMessage($appId);
@@ -17,7 +18,8 @@ interface StatisticsCollector
     /**
      * Handle the incoming API message.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function apiMessage($appId);
@@ -25,7 +27,8 @@ interface StatisticsCollector
     /**
      * Handle the new conection.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function connection($appId);
@@ -33,7 +36,8 @@ interface StatisticsCollector
     /**
      * Handle disconnections.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function disconnection($appId);
@@ -62,7 +66,8 @@ interface StatisticsCollector
     /**
      * Get the saved statistics for an app.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return PromiseInterface[\BeyondCode\LaravelWebSockets\Statistics\Statistic|null]
      */
     public function getAppStatistics($appId): PromiseInterface;
@@ -71,7 +76,8 @@ interface StatisticsCollector
      * Remove all app traces from the database if no connections have been set
      * in the meanwhile since last save.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function resetAppTraces($appId);

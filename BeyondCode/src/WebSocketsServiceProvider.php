@@ -30,12 +30,13 @@ class WebSocketsServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->mergeConfigFrom(
-            __DIR__.'/../config/websockets.php', 'websockets'
+            __DIR__.'/../config/websockets.php',
+            'websockets'
         );
 
         $this->publishes([
             __DIR__.'/../database/migrations/0000_00_00_000000_create_websockets_statistics_entries_table.php' => database_path('migrations/0000_00_00_000000_create_websockets_statistics_entries_table.php'),
-            __DIR__.'/../database/migrations/0000_00_00_000000_rename_statistics_counters.php' => database_path('migrations/0000_00_00_000000_rename_statistics_counters.php'),
+            __DIR__.'/../database/migrations/0000_00_00_000000_rename_statistics_counters.php'                 => database_path('migrations/0000_00_00_000000_rename_statistics_counters.php'),
         ], 'migrations');
 
         $this->registerAsyncRedisQueueDriver();
@@ -84,7 +85,7 @@ class WebSocketsServiceProvider extends ServiceProvider
             $config = $app['config']['websockets'];
             $class = $config['statistics']['store'];
 
-            return new $class;
+            return new $class();
         });
 
         $this->app->singleton(StatisticsCollector::class, function ($app) {
@@ -93,7 +94,7 @@ class WebSocketsServiceProvider extends ServiceProvider
 
             $class = $config['replication']['modes'][$replicationMode]['collector'];
 
-            return new $class;
+            return new $class();
         });
     }
 
@@ -133,7 +134,7 @@ class WebSocketsServiceProvider extends ServiceProvider
     protected function registerRouter()
     {
         $this->app->singleton('websockets.router', function () {
-            return new Router;
+            return new Router();
         });
     }
 
@@ -159,9 +160,9 @@ class WebSocketsServiceProvider extends ServiceProvider
     protected function registerDashboardRoutes()
     {
         Route::group([
-            'domain' => config('websockets.dashboard.domain'),
-            'prefix' => config('websockets.dashboard.path'),
-            'as' => 'laravel-websockets.',
+            'domain'     => config('websockets.dashboard.domain'),
+            'prefix'     => config('websockets.dashboard.path'),
+            'as'         => 'laravel-websockets.',
             'middleware' => config('websockets.dashboard.middleware', [AuthorizeDashboard::class]),
         ], function () {
             Route::get('/', ShowDashboard::class)->name('dashboard');

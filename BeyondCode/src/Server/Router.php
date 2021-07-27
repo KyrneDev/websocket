@@ -32,14 +32,14 @@ class Router
      */
     public function __construct()
     {
-        $this->routes = new RouteCollection;
+        $this->routes = new RouteCollection();
 
         $this->customRoutes = [
-            'get' => new Collection,
-            'post' => new Collection,
-            'put' => new Collection,
-            'patch' => new Collection,
-            'delete' => new Collection,
+            'get'    => new Collection(),
+            'post'   => new Collection(),
+            'put'    => new Collection(),
+            'patch'  => new Collection(),
+            'delete' => new Collection(),
         ];
     }
 
@@ -83,8 +83,9 @@ class Router
     /**
      * Add a GET route.
      *
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $uri
+     * @param string $action
+     *
      * @return void
      */
     public function get(string $uri, $action)
@@ -95,8 +96,9 @@ class Router
     /**
      * Add a POST route.
      *
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $uri
+     * @param string $action
+     *
      * @return void
      */
     public function post(string $uri, $action)
@@ -107,8 +109,9 @@ class Router
     /**
      * Add a PUT route.
      *
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $uri
+     * @param string $action
+     *
      * @return void
      */
     public function put(string $uri, $action)
@@ -119,8 +122,9 @@ class Router
     /**
      * Add a PATCH route.
      *
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $uri
+     * @param string $action
+     *
      * @return void
      */
     public function patch(string $uri, $action)
@@ -131,8 +135,9 @@ class Router
     /**
      * Add a DELETE route.
      *
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $uri
+     * @param string $action
+     *
      * @return void
      */
     public function delete(string $uri, $action)
@@ -143,9 +148,10 @@ class Router
     /**
      * Add a new route to the list.
      *
-     * @param  string  $method
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $method
+     * @param string $uri
+     * @param string $action
+     *
      * @return void
      */
     public function addRoute(string $method, string $uri, $action)
@@ -157,9 +163,10 @@ class Router
      * Add a new custom route. Registered routes
      * will be resolved at server spin-up.
      *
-     * @param  string  $method
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $method
+     * @param string $uri
+     * @param string $action
+     *
      * @return void
      */
     public function addCustomRoute(string $method, $uri, $action)
@@ -184,9 +191,10 @@ class Router
     /**
      * Get the route of a specified method, uri and action.
      *
-     * @param  string  $method
-     * @param  string  $uri
-     * @param  string  $action
+     * @param string $method
+     * @param string $uri
+     * @param string $action
+     *
      * @return \Symfony\Component\Routing\Route
      */
     protected function getRoute(string $method, string $uri, $action): Route
@@ -201,7 +209,8 @@ class Router
     /**
      * Create a new websockets server to handle the action.
      *
-     * @param  string  $action
+     * @param string $action
+     *
      * @return \Ratchet\WebSocket\WsServer
      */
     protected function createWebSocketsServer(string $action): WsServer

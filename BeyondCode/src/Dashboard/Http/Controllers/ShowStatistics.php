@@ -10,8 +10,9 @@ class ShowStatistics
     /**
      * Get statistics for an app ID.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $appId
+     * @param \Illuminate\Http\Request $request
+     * @param mixed                    $appId
+     *
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request, $appId)
@@ -27,7 +28,8 @@ class ShowStatistics
         };
 
         return StatisticsStore::getForGraph(
-            $processQuery, $processCollection
+            $processQuery,
+            $processCollection
         );
     }
 }

@@ -1,25 +1,22 @@
 <?php
 /**
- *
- *  This file is part of kyrne/websocket
+ *  This file is part of kyrne/websocket.
  *
  *  Copyright (c) 2020 Charlie Kern.
  *
  *  For the full copyright and license information, please view the EULA.md
  *  file that was distributed with this source code.
- *
  */
 
 namespace Kyrne\Websocket\Commands;
 
-use BeyondCode\LaravelWebSockets\Console\Commands\StartServer;
 use BeyondCode\LaravelWebSockets\API\FetchChannel;
 use BeyondCode\LaravelWebSockets\API\FetchChannels;
 use BeyondCode\LaravelWebSockets\API\FetchUsers;
+use BeyondCode\LaravelWebSockets\Console\Commands\StartServer;
+use BeyondCode\LaravelWebSockets\Contracts\ChannelManager;
 use BeyondCode\LaravelWebSockets\ServerFactory;
 use BeyondCode\LaravelWebSockets\Statistics\Collectors\MemoryCollector;
-use Illuminate\Support\Str;
-use BeyondCode\LaravelWebSockets\Contracts\ChannelManager;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Kyrne\Websocket\Channels\Managers\LocalChannelManager;
 use Kyrne\Websocket\WebSockets\SocketHandler;
@@ -27,7 +24,6 @@ use Kyrne\Websocket\WebSockets\TriggerBroadcastController;
 
 class WebsocketServer extends StartServer
 {
-
     protected function registerEchoRoutes()
     {
         $router = app('websockets.router');
@@ -50,7 +46,7 @@ class WebsocketServer extends StartServer
 
         if (isset($input) && ($option === 'host' && $input !== '0.0.0.0')) {
             return $input;
-        } elseif ($option === 'host' && parse_url(app('flarum.config')['url'])['host'] === $settings->get("kyrne-websocket.app_host")) {
+        } elseif ($option === 'host' && parse_url(app('flarum.config')['url'])['host'] === $settings->get('kyrne-websocket.app_host')) {
             return '0.0.0.0';
         }
 
@@ -86,11 +82,11 @@ class WebsocketServer extends StartServer
 
         if ((!is_readable($cert) || !is_readable($pk)) && $pk && $cert) {
             $this->error('Cannot access local certificate/passkey!');
+
             return;
         }
 
         $this->info("Selecting $host:$port.");
-
 
         $this->configureLoggers();
 
@@ -119,11 +115,10 @@ class WebsocketServer extends StartServer
 
     protected function configureStatistics()
     {
-        if (! $this->option('disable-statistics')) {
-
+        if (!$this->option('disable-statistics')) {
             $intervalInSeconds = $this->option('statistics-interval');
 
-            echo($intervalInSeconds);
+            echo $intervalInSeconds;
 
             $this->loop->addPeriodicTimer($intervalInSeconds, function () {
                 $this->line('Saving statistics...');
@@ -142,7 +137,8 @@ class WebsocketServer extends StartServer
     protected function buildServer()
     {
         $this->server = new ServerFactory(
-            $this->option('host'), $this->option('port')
+            $this->option('host'),
+            $this->option('port')
         );
 
         if ($loop = $this->option('loop')) {

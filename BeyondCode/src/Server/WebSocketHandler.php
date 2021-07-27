@@ -27,6 +27,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Initialize a new handler.
      *
      * @param \BeyondCode\LaravelWebSockets\Contracts\ChannelManager $channelManager
+     *
      * @return void
      */
     public function __construct(ChannelManager $channelManager)
@@ -38,6 +39,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Handle the socket opening.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     public function onOpen(ConnectionInterface $connection)
@@ -52,7 +54,6 @@ class WebSocketHandler implements MessageComponentInterface
             ->generateSocketId($connection)
             ->establishConnection($connection);
 
-
         if (isset($connection->app)) {
             /** @var \GuzzleHttp\Psr7\Request $request */
             $request = $connection->httpRequest;
@@ -64,7 +65,7 @@ class WebSocketHandler implements MessageComponentInterface
             $this->channelManager->connectionPonged($connection);
 
             DashboardLogger::log($connection->app->id, DashboardLogger::TYPE_CONNECTED, [
-                'origin' => "{$request->getUri()->getScheme()}://{$request->getUri()->getHost()}",
+                'origin'   => "{$request->getUri()->getScheme()}://{$request->getUri()->getHost()}",
                 'socketId' => $connection->socketId,
             ]);
 
@@ -75,8 +76,9 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Handle the incoming message.
      *
-     * @param \Ratchet\ConnectionInterface $connection
+     * @param \Ratchet\ConnectionInterface                $connection
      * @param \Ratchet\RFC6455\Messaging\MessageInterface $message
+     *
      * @return void
      */
     public function onMessage(ConnectionInterface $connection, MessageInterface $message)
@@ -86,7 +88,9 @@ class WebSocketHandler implements MessageComponentInterface
         }
 
         Messages\PusherMessageFactory::createForMessage(
-            $message, $connection, $this->channelManager
+            $message,
+            $connection,
+            $this->channelManager
         )->respond();
 
         if ($connection->app->statisticsEnabled) {
@@ -104,6 +108,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Handle the websocket close.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     public function onClose(ConnectionInterface $connection)
@@ -131,7 +136,8 @@ class WebSocketHandler implements MessageComponentInterface
      * Handle the websocket errors.
      *
      * @param \Ratchet\ConnectionInterface $connection
-     * @param WebSocketException $exception
+     * @param WebSocketException           $exception
+     *
      * @return void
      */
     public function onError(ConnectionInterface $connection, Exception $exception)
@@ -148,6 +154,7 @@ class WebSocketHandler implements MessageComponentInterface
      * current server instance.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return bool
      */
     protected function connectionCanBeMade(ConnectionInterface $connection): bool
@@ -159,6 +166,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Verify the app key validity.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return $this
      */
     protected function verifyAppKey(ConnectionInterface $connection)
@@ -180,6 +188,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Verify the origin.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return $this
      */
     protected function verifyOrigin(ConnectionInterface $connection)
@@ -188,7 +197,7 @@ class WebSocketHandler implements MessageComponentInterface
             return $this;
         }
 
-        $header = (string)($connection->httpRequest->getHeader('Origin')[0] ?? null);
+        $header = (string) ($connection->httpRequest->getHeader('Origin')[0] ?? null);
 
         $origin = parse_url($header, PHP_URL_HOST) ?: $header;
 
@@ -203,6 +212,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Limit the connections count by the app.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return $this
      */
     protected function limitConcurrentConnections(ConnectionInterface $connection)
@@ -212,7 +222,7 @@ class WebSocketHandler implements MessageComponentInterface
                 ->getGlobalConnectionsCount($connection->app->id)
                 ->then(function ($connectionsCount) use ($capacity, $connection) {
                     if ($connectionsCount >= $capacity) {
-                        $exception = new Exceptions\ConnectionsOverCapacity;
+                        $exception = new Exceptions\ConnectionsOverCapacity();
 
                         $payload = json_encode($exception->getPayload());
 
@@ -228,6 +238,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Create a socket id.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return $this
      */
     protected function generateSocketId(ConnectionInterface $connection)
@@ -243,14 +254,15 @@ class WebSocketHandler implements MessageComponentInterface
      * Establish connection with the client.
      *
      * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return $this
      */
     protected function establishConnection(ConnectionInterface $connection)
     {
         $connection->send(json_encode([
             'event' => 'pusher:connection_established',
-            'data' => json_encode([
-                'socket_id' => $connection->socketId,
+            'data'  => json_encode([
+                'socket_id'        => $connection->socketId,
                 'activity_timeout' => 30,
             ]),
         ]));

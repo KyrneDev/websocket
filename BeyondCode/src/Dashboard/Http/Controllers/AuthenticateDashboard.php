@@ -16,7 +16,8 @@ class AuthenticateDashboard
      * and then reconstruct the PusherBroadcaster
      * using our own app selection.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
@@ -24,9 +25,9 @@ class AuthenticateDashboard
         $app = App::findById($request->header('X-App-Id'));
 
         $broadcaster = $this->getPusherBroadcaster([
-            'key' => $app->key,
+            'key'    => $app->key,
             'secret' => $app->secret,
-            'id' =>$app->id,
+            'id'     => $app->id,
         ]);
 
         /*

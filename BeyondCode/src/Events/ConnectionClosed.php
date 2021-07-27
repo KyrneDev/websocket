@@ -7,7 +7,8 @@ use Illuminate\Queue\SerializesModels;
 
 class ConnectionClosed
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * The WebSockets app id that the user connected to.
@@ -26,8 +27,9 @@ class ConnectionClosed
     /**
      * Create a new event instance.
      *
-     * @param  string  $appId
-     * @param  string  $socketId
+     * @param string $appId
+     * @param string $socketId
+     *
      * @return void
      */
     public function __construct(string $appId, string $socketId)

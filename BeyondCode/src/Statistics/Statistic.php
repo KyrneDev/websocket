@@ -44,8 +44,9 @@ class Statistic
     /**
      * Create a new statistic.
      *
-     * @param  string|int  $appId
-     * @return  void
+     * @param string|int $appId
+     *
+     * @return void
      */
     public function __construct($appId)
     {
@@ -55,7 +56,8 @@ class Statistic
     /**
      * Create a new statistic instance.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return \BeyondCode\LaravelWebSockets\Statistics\Statistic
      */
     public static function new($appId)
@@ -66,7 +68,8 @@ class Statistic
     /**
      * Set the current connections count.
      *
-     * @param  int  $currentConnectionsCount
+     * @param int $currentConnectionsCount
+     *
      * @return $this
      */
     public function setCurrentConnectionsCount(int $currentConnectionsCount)
@@ -79,7 +82,8 @@ class Statistic
     /**
      * Set the peak connections count.
      *
-     * @param  int  $peakConnectionsCount
+     * @param int $peakConnectionsCount
+     *
      * @return $this
      */
     public function setPeakConnectionsCount(int $peakConnectionsCount)
@@ -92,7 +96,8 @@ class Statistic
     /**
      * Set the peak connections count.
      *
-     * @param  int  $webSocketMessagesCount
+     * @param int $webSocketMessagesCount
+     *
      * @return $this
      */
     public function setWebSocketMessagesCount(int $webSocketMessagesCount)
@@ -105,7 +110,8 @@ class Statistic
     /**
      * Set the peak connections count.
      *
-     * @param  int  $apiMessagesCount
+     * @param int $apiMessagesCount
+     *
      * @return $this
      */
     public function setApiMessagesCount(int $apiMessagesCount)
@@ -172,7 +178,8 @@ class Statistic
     /**
      * Reset all the connections to a specific count.
      *
-     * @param  int  $currentConnectionsCount
+     * @param int $currentConnectionsCount
+     *
      * @return void
      */
     public function reset(int $currentConnectionsCount)
@@ -203,10 +210,10 @@ class Statistic
     public function toArray()
     {
         return [
-            'app_id' => $this->appId,
-            'peak_connections_count' => $this->peakConnectionsCount,
+            'app_id'                   => $this->appId,
+            'peak_connections_count'   => $this->peakConnectionsCount,
             'websocket_messages_count' => $this->webSocketMessagesCount,
-            'api_messages_count' => $this->apiMessagesCount,
+            'api_messages_count'       => $this->apiMessagesCount,
         ];
     }
 }

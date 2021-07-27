@@ -1,6 +1,6 @@
 <?php
 
-Use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 
 return [
@@ -15,8 +15,7 @@ return [
         });
     },
 
-
     'down' => function (Builder $schema) {
         $schema->dropIfExists('websockets_statistics_entries');
-    }
+    },
 ];

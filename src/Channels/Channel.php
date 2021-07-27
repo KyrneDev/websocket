@@ -3,8 +3,8 @@
 namespace Kyrne\Websocket\Channels;
 
 use BeyondCode\LaravelWebSockets\Channels\Channel as BaseChannel;
-use stdClass;
 use Ratchet\ConnectionInterface;
+use stdClass;
 
 class Channel extends BaseChannel
 {
@@ -13,7 +13,7 @@ class Channel extends BaseChannel
         $this->saveConnection($connection);
 
         $connection->send(json_encode([
-            'event' => 'pusher_internal:subscription_succeeded',
+            'event'   => 'pusher_internal:subscription_succeeded',
             'channel' => $this->getName(),
         ]));
 
@@ -22,7 +22,7 @@ class Channel extends BaseChannel
 
     public function unsubscribe(ConnectionInterface $connection): bool
     {
-        if (! $this->hasConnection($connection)) {
+        if (!$this->hasConnection($connection)) {
             return false;
         }
 

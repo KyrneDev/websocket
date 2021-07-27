@@ -7,7 +7,6 @@ use Flarum\Frontend\Document;
 
 class AddStatsData
 {
-
     /**
      * @var StatisticsStore
      */
@@ -15,6 +14,7 @@ class AddStatsData
 
     /**
      * AddStatsData constructor.
+     *
      * @param StatisticsStore $stats
      */
     public function __construct(StatisticsStore $stats)

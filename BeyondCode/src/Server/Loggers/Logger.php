@@ -43,7 +43,8 @@ class Logger
     /**
      * Create a new Logger instance.
      *
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $consoleOutput
+     * @param \Symfony\Component\Console\Output\OutputInterface $consoleOutput
+     *
      * @return void
      */
     public function __construct(OutputInterface $consoleOutput)
@@ -54,7 +55,8 @@ class Logger
     /**
      * Enable the logger.
      *
-     * @param  bool  $enabled
+     * @param bool $enabled
+     *
      * @return $this
      */
     public function enable($enabled = true)
@@ -67,7 +69,8 @@ class Logger
     /**
      * Enable the verbose mode.
      *
-     * @param  bool  $verbose
+     * @param bool $verbose
+     *
      * @return $this
      */
     public function verbose($verbose = false)
@@ -80,7 +83,8 @@ class Logger
     /**
      * Trigger an Info message.
      *
-     * @param  string  $message
+     * @param string $message
+     *
      * @return void
      */
     protected function info(string $message)
@@ -91,12 +95,13 @@ class Logger
     /**
      * Trigger a Warning message.
      *
-     * @param  string  $message
+     * @param string $message
+     *
      * @return void
      */
     protected function warn(string $message)
     {
-        if (! $this->consoleOutput->getFormatter()->hasStyle('warning')) {
+        if (!$this->consoleOutput->getFormatter()->hasStyle('warning')) {
             $style = new OutputFormatterStyle('yellow');
 
             $this->consoleOutput->getFormatter()->setStyle('warning', $style);
@@ -108,7 +113,8 @@ class Logger
     /**
      * Trigger an Error message.
      *
-     * @param  string  $message
+     * @param string $message
+     *
      * @return void
      */
     protected function error(string $message)

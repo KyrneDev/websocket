@@ -13,15 +13,17 @@ class PusherMessageFactory
     /**
      * Create a new message.
      *
-     * @param  \Ratchet\RFC6455\Messaging\MessageInterface  $message
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \BeyondCode\LaravelWebSockets\Contracts\ChannelManager  $channelManager
+     * @param \Ratchet\RFC6455\Messaging\MessageInterface            $message
+     * @param \Ratchet\ConnectionInterface                           $connection
+     * @param \BeyondCode\LaravelWebSockets\Contracts\ChannelManager $channelManager
+     *
      * @return PusherMessage
      */
     public static function createForMessage(
         MessageInterface $message,
         ConnectionInterface $connection,
-        ChannelManager $channelManager): PusherMessage
+        ChannelManager $channelManager
+    ): PusherMessage
     {
         $payload = json_decode($message->getPayload());
 

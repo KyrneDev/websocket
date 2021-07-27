@@ -39,7 +39,8 @@ class App
     /**
      * Find the app by id.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return \BeyondCode\LaravelWebSockets\Apps\App|null
      */
     public static function findById($appId)
@@ -50,7 +51,8 @@ class App
     /**
      * Find the app by app key.
      *
-     * @param  string  $appKey
+     * @param string $appKey
+     *
      * @return \BeyondCode\LaravelWebSockets\Apps\App|null
      */
     public static function findByKey($appKey): ?self
@@ -61,7 +63,8 @@ class App
     /**
      * Find the app by app secret.
      *
-     * @param  string  $appSecret
+     * @param string $appSecret
+     *
      * @return \BeyondCode\LaravelWebSockets\Apps\App|null
      */
     public static function findBySecret($appSecret): ?self
@@ -72,9 +75,10 @@ class App
     /**
      * Initialize the Web Socket app instance.
      *
-     * @param  string|int  $appId
-     * @param  string  $key
-     * @param  string  $secret
+     * @param string|int $appId
+     * @param string     $key
+     * @param string     $secret
+     *
      * @return void
      */
     public function __construct($appId, $appKey, $appSecret)
@@ -87,7 +91,8 @@ class App
     /**
      * Set the name of the app.
      *
-     * @param  string  $appName
+     * @param string $appName
+     *
      * @return $this
      */
     public function setName(string $appName)
@@ -100,7 +105,8 @@ class App
     /**
      * Set the app host.
      *
-     * @param  string  $host
+     * @param string $host
+     *
      * @return $this
      */
     public function setHost(string $host)
@@ -113,7 +119,8 @@ class App
     /**
      * Set path for the app.
      *
-     * @param  string  $path
+     * @param string $path
+     *
      * @return $this
      */
     public function setPath(string $path)
@@ -126,7 +133,8 @@ class App
     /**
      * Enable client messages.
      *
-     * @param  bool  $enabled
+     * @param bool $enabled
+     *
      * @return $this
      */
     public function enableClientMessages(bool $enabled = true)
@@ -139,7 +147,8 @@ class App
     /**
      * Set the maximum capacity for the app.
      *
-     * @param  int|null  $capacity
+     * @param int|null $capacity
+     *
      * @return $this
      */
     public function setCapacity(?int $capacity)
@@ -152,7 +161,8 @@ class App
     /**
      * Enable statistics for the app.
      *
-     * @param  bool  $enabled
+     * @param bool $enabled
+     *
      * @return $this
      */
     public function enableStatistics(bool $enabled = true)
@@ -165,7 +175,8 @@ class App
     /**
      * Add whitelisted origins.
      *
-     * @param  array  $allowedOrigins
+     * @param array $allowedOrigins
+     *
      * @return $this
      */
     public function setAllowedOrigins(array $allowedOrigins)

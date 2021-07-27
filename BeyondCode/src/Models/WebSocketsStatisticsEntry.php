@@ -14,12 +14,12 @@ class WebSocketsStatisticsEntry extends AbstractModel
 
     protected $dates = [
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public static function build(array $data)
     {
-        $stat = new static;
+        $stat = new static();
 
         $stat->app_id = $data['app_id'];
         $stat->peak_connection_count = $data['peak_connection_count'];

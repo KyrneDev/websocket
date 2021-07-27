@@ -35,9 +35,9 @@ class PusherClientMessage implements PusherMessage
     /**
      * Create a new instance.
      *
-     * @param  \stdClass  $payload
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  ChannelManager  $channelManager
+     * @param \stdClass                    $payload
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param ChannelManager               $channelManager
      */
     public function __construct(stdClass $payload, ConnectionInterface $connection, ChannelManager $channelManager)
     {
@@ -53,27 +53,30 @@ class PusherClientMessage implements PusherMessage
      */
     public function respond()
     {
-        if (! Str::startsWith($this->payload->event, 'client-')) {
+        if (!Str::startsWith($this->payload->event, 'client-')) {
             return;
         }
 
-        if (! $this->connection->app->clientMessagesEnabled) {
+        if (!$this->connection->app->clientMessagesEnabled) {
             return;
         }
 
         $channel = $this->channelManager->find(
-            $this->connection->app->id, $this->payload->channel
+            $this->connection->app->id,
+            $this->payload->channel
         );
 
         optional($channel)->broadcastToEveryoneExcept(
-            $this->payload, $this->connection->socketId, $this->connection->app->id
+            $this->payload,
+            $this->connection->socketId,
+            $this->connection->app->id
         );
 
         DashboardLogger::log($this->connection->app->id, DashboardLogger::TYPE_WS_MESSAGE, [
             'socketId' => $this->connection->socketId,
-            'event' => $this->payload->event,
-            'channel' => $this->payload->channel,
-            'data' => $this->payload,
+            'event'    => $this->payload->event,
+            'channel'  => $this->payload->channel,
+            'data'     => $this->payload,
         ]);
     }
 }

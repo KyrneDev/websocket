@@ -13,8 +13,9 @@ class HealthHandler implements HttpServerInterface
     /**
      * Handle the socket opening.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \Psr\Http\Message\RequestInterface  $request
+     * @param \Ratchet\ConnectionInterface       $connection
+     * @param \Psr\Http\Message\RequestInterface $request
+     *
      * @return void
      */
     public function onOpen(ConnectionInterface $connection, RequestInterface $request = null)
@@ -31,8 +32,9 @@ class HealthHandler implements HttpServerInterface
     /**
      * Handle the incoming message.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  string  $message
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param string                       $message
+     *
      * @return void
      */
     public function onMessage(ConnectionInterface $connection, $message)
@@ -43,7 +45,8 @@ class HealthHandler implements HttpServerInterface
     /**
      * Handle the websocket close.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     public function onClose(ConnectionInterface $connection)
@@ -54,8 +57,9 @@ class HealthHandler implements HttpServerInterface
     /**
      * Handle the websocket errors.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  WebSocketException  $exception
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param WebSocketException           $exception
+     *
      * @return void
      */
     public function onError(ConnectionInterface $connection, Exception $exception)

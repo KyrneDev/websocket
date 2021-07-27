@@ -61,7 +61,8 @@ abstract class Controller implements HttpServerInterface
     /**
      * Initialize the request.
      *
-     * @param  ChannelManager  $channelManager
+     * @param ChannelManager $channelManager
+     *
      * @return void
      */
     public function __construct(ChannelManager $channelManager)
@@ -72,8 +73,9 @@ abstract class Controller implements HttpServerInterface
     /**
      * Handle the opened socket connection.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \Psr\Http\Message\RequestInterface  $request
+     * @param \Ratchet\ConnectionInterface       $connection
+     * @param \Psr\Http\Message\RequestInterface $request
+     *
      * @return void
      */
     public function onOpen(ConnectionInterface $connection, RequestInterface $request = null)
@@ -84,7 +86,7 @@ abstract class Controller implements HttpServerInterface
 
         $this->requestBuffer = (string) $request->getBody();
 
-        if (! $this->verifyContentLength()) {
+        if (!$this->verifyContentLength()) {
             return;
         }
 
@@ -94,15 +96,16 @@ abstract class Controller implements HttpServerInterface
     /**
      * Handle the oncoming message and add it to buffer.
      *
-     * @param  \Ratchet\ConnectionInterface  $from
-     * @param  mixed  $msg
+     * @param \Ratchet\ConnectionInterface $from
+     * @param mixed                        $msg
+     *
      * @return void
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $this->requestBuffer .= $msg;
 
-        if (! $this->verifyContentLength()) {
+        if (!$this->verifyContentLength()) {
             return;
         }
 
@@ -112,7 +115,8 @@ abstract class Controller implements HttpServerInterface
     /**
      * Handle the socket closing.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     public function onClose(ConnectionInterface $connection)
@@ -123,13 +127,14 @@ abstract class Controller implements HttpServerInterface
     /**
      * Handle the errors.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  Exception  $exception
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param Exception                    $exception
+     *
      * @return void
      */
     public function onError(ConnectionInterface $connection, Exception $exception)
     {
-        if (! $exception instanceof HttpException) {
+        if (!$exception instanceof HttpException) {
             return;
         }
 
@@ -145,7 +150,8 @@ abstract class Controller implements HttpServerInterface
     /**
      * Get the content length from the headers.
      *
-     * @param  array  $headers
+     * @param array $headers
+     *
      * @return int
      */
     protected function findContentLength(array $headers): int
@@ -168,7 +174,8 @@ abstract class Controller implements HttpServerInterface
     /**
      * Handle the oncoming connection.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     protected function handleRequest(ConnectionInterface $connection)
@@ -181,7 +188,7 @@ abstract class Controller implements HttpServerInterface
             $this->request->getProtocolVersion()
         ))->withQueryParams(QueryParameters::create($this->request)->all());
 
-        $laravelRequest = Request::createFromBase((new HttpFoundationFactory)->createRequest($serverRequest));
+        $laravelRequest = Request::createFromBase((new HttpFoundationFactory())->createRequest($serverRequest));
 
         $this->ensureValidAppId($laravelRequest->get('appId'))
             ->ensureValidSignature($laravelRequest);
@@ -208,8 +215,9 @@ abstract class Controller implements HttpServerInterface
     /**
      * Send the response and close the connection.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  mixed  $response
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param mixed                        $response
+     *
      * @return void
      */
     protected function sendAndClose(ConnectionInterface $connection, $response)
@@ -220,13 +228,15 @@ abstract class Controller implements HttpServerInterface
     /**
      * Ensure app existence.
      *
-     * @param  mixed  $appId
-     * @return $this
+     * @param mixed $appId
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     *
+     * @return $this
      */
     public function ensureValidAppId($appId)
     {
-        if (! $appId || ! $this->app = App::findById($appId)) {
+        if (!$appId || !$this->app = App::findById($appId)) {
             throw new HttpException(401, "Unknown app id `{$appId}` provided.");
         }
 
@@ -237,9 +247,11 @@ abstract class Controller implements HttpServerInterface
      * Ensure signature integrity coming from an
      * authorized application.
      *
-     * @param  \GuzzleHttp\Psr7\ServerRequest  $request
-     * @return $this
+     * @param \GuzzleHttp\Psr7\ServerRequest $request
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     *
+     * @return $this
      */
     protected function ensureValidSignature(Request $request)
     {
@@ -270,7 +282,8 @@ abstract class Controller implements HttpServerInterface
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return void
      */
     abstract public function __invoke(Request $request);

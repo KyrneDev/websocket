@@ -10,8 +10,9 @@ class HttpServer extends BaseHttpServer
     /**
      * Create a new server instance.
      *
-     * @param  \Ratchet\Http\HttpServerInterface  $component
-     * @param  int  $maxRequestSize
+     * @param \Ratchet\Http\HttpServerInterface $component
+     * @param int                               $maxRequestSize
+     *
      * @return void
      */
     public function __construct(HttpServerInterface $component, int $maxRequestSize = 4096)

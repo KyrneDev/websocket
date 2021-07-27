@@ -27,7 +27,9 @@ class PusherChannelProtocolMessage extends PusherClientMessage
      * Ping the connection.
      *
      * @see    https://pusher.com/docs/pusher_protocol#ping-pong
-     * @param  \Ratchet\ConnectionInterface  $connection
+     *
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     protected function ping(ConnectionInterface $connection)
@@ -45,8 +47,10 @@ class PusherChannelProtocolMessage extends PusherClientMessage
      * Subscribe to channel.
      *
      * @see    https://pusher.com/docs/pusher_protocol#pusher-subscribe
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \stdClass  $payload
+     *
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param \stdClass                    $payload
+     *
      * @return void
      */
     protected function subscribe(ConnectionInterface $connection, stdClass $payload)
@@ -57,8 +61,9 @@ class PusherChannelProtocolMessage extends PusherClientMessage
     /**
      * Unsubscribe from the channel.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \stdClass  $payload
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param \stdClass                    $payload
+     *
      * @return void
      */
     public function unsubscribe(ConnectionInterface $connection, stdClass $payload)

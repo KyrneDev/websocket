@@ -1,32 +1,27 @@
 <?php
 /**
- *
- *  This file is part of kyrne/websocket
+ *  This file is part of kyrne/websocket.
  *
  *  Copyright (c) 2020 Charlie Kern.
  *
  *  For the full copyright and license information, please view the EULA.md
  *  file that was distributed with this source code.
- *
  */
 
 namespace Kyrne\Websocket\WebSockets;
 
-use BeyondCode\LaravelWebSockets\Facades\StatisticsCollector;
-use BeyondCode\LaravelWebSockets\Server\Messages\PusherMessageFactory;
-use BeyondCode\LaravelWebSockets\Server\WebSocketHandler;
-use BeyondCode\LaravelWebSockets\Server\Messages\PusherClientMessage;
-use BeyondCode\LaravelWebSockets\Contracts\PusherMessage;
 use BeyondCode\LaravelWebSockets\Contracts\ChannelManager;
+use BeyondCode\LaravelWebSockets\Contracts\PusherMessage;
+use BeyondCode\LaravelWebSockets\Server\Messages\PusherClientMessage;
+use BeyondCode\LaravelWebSockets\Server\WebSocketHandler;
 use BeyondCode\LaravelWebSockets\Statistics\Collectors\MemoryCollector;
 use Illuminate\Support\Str;
+use Kyrne\Websocket\WebSockets\Messages\PusherChannelProtocolMessage;
 use Ratchet\ConnectionInterface;
 use Ratchet\RFC6455\Messaging\MessageInterface;
-use Kyrne\Websocket\WebSockets\Messages\PusherChannelProtocolMessage;
 
 class SocketHandler extends WebSocketHandler
 {
-
     /**
      * @var MemoryCollector
      */
@@ -47,8 +42,9 @@ class SocketHandler extends WebSocketHandler
         $message->respond();
     }
 
-    public function onOpen(ConnectionInterface $connection) {
-        if (! $this->connectionCanBeMade($connection)) {
+    public function onOpen(ConnectionInterface $connection)
+    {
+        if (!$this->connectionCanBeMade($connection)) {
             return $connection->close();
         }
 
@@ -81,7 +77,8 @@ class SocketHandler extends WebSocketHandler
     public static function createForMessage(
         MessageInterface $message,
         ConnectionInterface $connection,
-        ChannelManager $channelManager): PusherMessage
+        ChannelManager $channelManager
+    ): PusherMessage
     {
         $payload = json_decode($message->getPayload());
 
@@ -94,8 +91,8 @@ class SocketHandler extends WebSocketHandler
     {
         $connection->send(json_encode([
             'event' => 'pusher:connection_established',
-            'data' => json_encode([
-                'socket_id' => $connection->socketId,
+            'data'  => json_encode([
+                'socket_id'        => $connection->socketId,
                 'activity_timeout' => 30,
             ]),
         ]));

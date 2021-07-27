@@ -7,7 +7,8 @@ class UnknownAppKey extends WebSocketException
     /**
      * Initalize the exception.
      *
-     * @param  string  $appKey
+     * @param string $appKey
+     *
      * @return void
      */
     public function __construct($appKey)

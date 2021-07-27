@@ -30,7 +30,8 @@ class Channel
     /**
      * Create a new instance.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return void
      */
     public function __construct(string $name)
@@ -73,8 +74,10 @@ class Channel
      * Add a new connection to the channel.
      *
      * @see    https://pusher.com/docs/pusher_protocol#presence-channel-events
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \stdClass  $payload
+     *
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param \stdClass                    $payload
+     *
      * @return bool
      */
     public function subscribe(ConnectionInterface $connection, stdClass $payload): bool
@@ -82,13 +85,13 @@ class Channel
         $this->saveConnection($connection);
 
         $connection->send(json_encode([
-            'event' => 'pusher_internal:subscription_succeeded',
+            'event'   => 'pusher_internal:subscription_succeeded',
             'channel' => $this->getName(),
         ]));
 
         DashboardLogger::log($connection->app->id, DashboardLogger::TYPE_SUBSCRIBED, [
             'socketId' => $connection->socketId,
-            'channel' => $this->getName(),
+            'channel'  => $this->getName(),
         ]);
 
         SubscribedToChannel::dispatch(
@@ -103,12 +106,13 @@ class Channel
     /**
      * Unsubscribe connection from the channel.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return bool
      */
     public function unsubscribe(ConnectionInterface $connection): bool
     {
-        if (! $this->hasConnection($connection)) {
+        if (!$this->hasConnection($connection)) {
             return false;
         }
 
@@ -126,7 +130,8 @@ class Channel
     /**
      * Check if the given connection exists.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return bool
      */
     public function hasConnection(ConnectionInterface $connection): bool
@@ -137,7 +142,8 @@ class Channel
     /**
      * Store the connection to the subscribers list.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     public function saveConnection(ConnectionInterface $connection)
@@ -148,9 +154,10 @@ class Channel
     /**
      * Broadcast a payload to the subscribed connections.
      *
-     * @param  string|int  $appId
-     * @param  \stdClass  $payload
-     * @param  bool  $replicate
+     * @param string|int $appId
+     * @param \stdClass  $payload
+     * @param bool       $replicate
+     *
      * @return bool
      */
     public function broadcast($appId, stdClass $payload, bool $replicate = true): bool
@@ -170,8 +177,9 @@ class Channel
     /**
      * Broadcast a payload to the locally-subscribed connections.
      *
-     * @param  string|int  $appId
-     * @param  \stdClass  $payload
+     * @param string|int $appId
+     * @param \stdClass  $payload
+     *
      * @return bool
      */
     public function broadcastLocally($appId, stdClass $payload): bool
@@ -182,10 +190,11 @@ class Channel
     /**
      * Broadcast the payload, but exclude a specific socket id.
      *
-     * @param  \stdClass  $payload
-     * @param  string|null  $socketId
-     * @param  string|int  $appId
-     * @param  bool  $replicate
+     * @param \stdClass   $payload
+     * @param string|null $socketId
+     * @param string|int  $appId
+     * @param bool        $replicate
+     *
      * @return bool
      */
     public function broadcastToEveryoneExcept(stdClass $payload, ?string $socketId, $appId, bool $replicate = true)
@@ -210,25 +219,31 @@ class Channel
     /**
      * Broadcast the payload, but exclude a specific socket id.
      *
-     * @param  \stdClass  $payload
-     * @param  string|null  $socketId
-     * @param  string|int  $appId
+     * @param \stdClass   $payload
+     * @param string|null $socketId
+     * @param string|int  $appId
+     *
      * @return bool
      */
     public function broadcastLocallyToEveryoneExcept(stdClass $payload, ?string $socketId, $appId)
     {
         return $this->broadcastToEveryoneExcept(
-            $payload, $socketId, $appId, false
+            $payload,
+            $socketId,
+            $appId,
+            false
         );
     }
 
     /**
      * Check if the signature for the payload is valid.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \stdClass  $payload
-     * @return void
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param \stdClass                    $payload
+     *
      * @throws InvalidSignature
+     *
+     * @return void
      */
     protected function verifySignature(ConnectionInterface $connection, stdClass $payload)
     {
@@ -238,11 +253,12 @@ class Channel
             $signature .= ":{$payload->channel_data}";
         }
 
-        if (! hash_equals(
+        if (!hash_equals(
             hash_hmac('sha256', $signature, $connection->app->secret),
-            Str::after($payload->auth, ':'))
+            Str::after($payload->auth, ':')
+        )
         ) {
-            throw new InvalidSignature;
+            throw new InvalidSignature();
         }
     }
 }

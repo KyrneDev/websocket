@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Kyrne\Websocket\Channels;
 
 use Ratchet\ConnectionInterface;

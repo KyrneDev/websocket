@@ -2,26 +2,22 @@
 
 namespace Kyrne\Websocket;
 
-use Flarum\Api\Event\Serializing;
-use Flarum\Extend\Frontend;
-use Flarum\Extend\Routes;
 use Flarum\Extend\Console;
-use Flarum\Extend\Notification;
-use Flarum\Extend\Locales;
-use Flarum\Extend\ServiceProvider;
 use Flarum\Extend\Event;
-
+use Flarum\Extend\Frontend;
+use Flarum\Extend\Locales;
+use Flarum\Extend\Notification;
+use Flarum\Extend\Routes;
+use Flarum\Extend\ServiceProvider;
 use Flarum\Extend\Settings;
-use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
 use Kyrne\Websocket\Api\Controllers\AuthController;
 use Kyrne\Websocket\Api\Controllers\TypingWebsocketController;
-use Kyrne\Websocket\Provider\AppProvider;
-use Kyrne\Websocket\WebsocketNotificationDriver;
 use Kyrne\Websocket\Extend\GenerateApp;
+use Kyrne\Websocket\Provider\AppProvider;
 
 return [
-    (new Console)
+    (new Console())
         ->command(Commands\WebsocketServer::class)
         ->command(Commands\AltServer::class),
 
@@ -49,19 +45,19 @@ return [
         ->driver('websocket', WebsocketNotificationDriver::class),
 
     (new Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
-        ->css(__DIR__ . '/less/forum.less'),
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/less/forum.less'),
 
     (new Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js')
-        ->css(__DIR__ . '/less/admin.less')
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/less/admin.less')
         ->content(AddStatsData::class),
 
-    new Locales(__DIR__ . '/resources/locale'),
+    new Locales(__DIR__.'/resources/locale'),
 
     (new Routes('api'))
         ->post('/posts/typing', 'posts.typing', TypingWebsocketController::class)
         ->post('/websocket/auth', 'websocket.auth', AuthController::class),
     (new ServiceProvider())
-        ->register(AppProvider::class)
+        ->register(AppProvider::class),
 ];
