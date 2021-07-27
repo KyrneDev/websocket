@@ -21,9 +21,9 @@ export default class StatisticsWidget extends DashboardWidget {
   content() {
 
     return (
-      <div className="StatisticsWidget-table">
+      <div className="WebsocketStatisticsWidget-table">
 
-        <div className="StatisticsWidget-chart" oncreate={this.drawChart.bind(this)}
+        <div className="WebsocketStatisticsWidget-chart" oncreate={this.drawChart.bind(this)}
              onupdate={this.drawChart.bind(this)}/>
       </div>
     );
