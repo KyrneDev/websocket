@@ -4,7 +4,7 @@ namespace BeyondCode\LaravelWebSockets\Statistics\Collectors;
 
 use BeyondCode\LaravelWebSockets\Contracts\ChannelManager;
 use BeyondCode\LaravelWebSockets\Contracts\StatisticsCollector;
-use BeyondCode\LaravelWebSockets\Facades\StatisticsStore;
+use BeyondCode\LaravelWebSockets\Contracts\StatisticsStore;
 use BeyondCode\LaravelWebSockets\Helpers;
 use BeyondCode\LaravelWebSockets\Statistics\Statistic;
 use React\Promise\PromiseInterface;
@@ -184,6 +184,6 @@ class MemoryCollector implements StatisticsCollector
      */
     public function createRecord(Statistic $statistic, $appId)
     {
-        StatisticsStore::store($statistic->toArray());
+        app(StatisticsStore::class)->store($statistic->toArray());
     }
 }

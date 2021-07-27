@@ -40,6 +40,12 @@ export default class WebsocketPage extends ExtensionPage {
             </div>
 
             <div className="Form-group">
+              <label>{app.translator.trans('kyrne-websocket.admin.pusher_settings.stats_label')}</label>
+              <div className='helpText'>{app.translator.trans('kyrne-websocket.admin.help.stats')}</div>
+              <input placeholder={7200} className="FormControl" bidi={this.setting('kyrne-websocket.app_statistics-interval')}/>
+            </div>
+
+            <div className="Form-group">
               <Switch
                 state={!!this.setting('kyrne-websocket.reverse_proxy')() && this.setting('kyrne-websocket.reverse_proxy')() !== '0'}
                 onchange={this.settings['kyrne-websocket.reverse_proxy']}>

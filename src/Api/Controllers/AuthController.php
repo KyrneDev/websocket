@@ -10,7 +10,7 @@
  *
  */
 
-namespace Kyrne\Websocket\Api\Controller;
+namespace Kyrne\Websocket\Api\Controllers;
 
 use Flarum\Http\RequestUtil;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -35,10 +35,13 @@ class AuthController implements RequestHandlerInterface
     }
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $userChannel = 'private-user'.RequestUtil::getActor($request)->id;
+        $actor = RequestUtil::getActor($request);
+        $userChannel = 'private-user'.$actor->id;
         $body = $request->getParsedBody();
+        $channelName = Arr::get($body, 'channel_name');
+        $socketId = Arr::get($body, 'socket_id');
 
-        if (Arr::get($body, 'channel_name') === $userChannel) {
+        if ($channelName === $userChannel) {
             $pusher = new Pusher(
                 $this->settings->get('kyrne-websocket.app_key'),
                 $this->settings->get('kyrne-websocket.app_secret'),
@@ -48,10 +51,29 @@ class AuthController implements RequestHandlerInterface
                 $this->settings->get('kyrne-websocket.app_port')
             );
 
-            $payload = json_decode($pusher->socket_auth($userChannel, Arr::get($body, 'socket_id')), true);
+            $payload = json_decode($pusher->socket_auth($userChannel, $socketId), true);
 
             return new JsonResponse($payload);
-        } else if (strpos(Arr::get($body, 'channel_name'), 'private-loginId') !== false) {
+        } else if (strpos($channelName, 'presence') !== false) {
+            if ($actor->id) {
+                $pusher = new Pusher(
+                    $this->settings->get('kyrne-websocket.app_key'),
+                    $this->settings->get('kyrne-websocket.app_secret'),
+                    $this->settings->get('kyrne-websocket.app_id'),
+                    [],
+                    $this->settings->get('kyrne-websocket.app_host'),
+                    $this->settings->get('kyrne-websocket.app_port')
+                );
+
+                $payload = json_decode($pusher->presence_auth($channelName, $socketId, $actor->id, [
+                    'username' => $actor->username,
+                    'avatarUrl' => $actor->avatar_url,
+                ]), true);
+
+                return new JsonResponse($payload);
+            }
+
+        } else if (strpos($channelName, 'private-loginId') !== false) {
             $pusher = new Pusher(
                 $this->settings->get('kyrne-websocket.app_key'),
                 $this->settings->get('kyrne-websocket.app_secret'),
@@ -61,7 +83,7 @@ class AuthController implements RequestHandlerInterface
                 $this->settings->get('kyrne-websocket.app_port')
             );
 
-            $payload = json_decode($pusher->socket_auth(Arr::get($body, 'channel_name'), Arr::get($body, 'socket_id')), true);
+            $payload = json_decode($pusher->socket_auth(Arr::get($body, 'channel_name'), $socketId), true);
 
             return new JsonResponse($payload);
         }

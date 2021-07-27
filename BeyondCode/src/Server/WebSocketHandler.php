@@ -26,7 +26,7 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Initialize a new handler.
      *
-     * @param  \BeyondCode\LaravelWebSockets\Contracts\ChannelManager  $channelManager
+     * @param \BeyondCode\LaravelWebSockets\Contracts\ChannelManager $channelManager
      * @return void
      */
     public function __construct(ChannelManager $channelManager)
@@ -37,12 +37,12 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Handle the socket opening.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return void
      */
     public function onOpen(ConnectionInterface $connection)
     {
-        if (! $this->connectionCanBeMade($connection)) {
+        if (!$this->connectionCanBeMade($connection)) {
             return $connection->close();
         }
 
@@ -52,13 +52,12 @@ class WebSocketHandler implements MessageComponentInterface
             ->generateSocketId($connection)
             ->establishConnection($connection);
 
+
         if (isset($connection->app)) {
             /** @var \GuzzleHttp\Psr7\Request $request */
             $request = $connection->httpRequest;
 
-            if ($connection->app->statisticsEnabled) {
-                StatisticsCollector::connection($connection->app->id);
-            }
+            StatisticsCollector::connection($connection->app->id);
 
             $this->channelManager->subscribeToApp($connection->app->id);
 
@@ -76,13 +75,13 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Handle the incoming message.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  \Ratchet\RFC6455\Messaging\MessageInterface  $message
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param \Ratchet\RFC6455\Messaging\MessageInterface $message
      * @return void
      */
     public function onMessage(ConnectionInterface $connection, MessageInterface $message)
     {
-        if (! isset($connection->app)) {
+        if (!isset($connection->app)) {
             return;
         }
 
@@ -104,7 +103,7 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Handle the websocket close.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return void
      */
     public function onClose(ConnectionInterface $connection)
@@ -131,8 +130,8 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Handle the websocket errors.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  WebSocketException  $exception
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param WebSocketException $exception
      * @return void
      */
     public function onError(ConnectionInterface $connection, Exception $exception)
@@ -148,7 +147,7 @@ class WebSocketHandler implements MessageComponentInterface
      * Check if the connection can be made for the
      * current server instance.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return bool
      */
     protected function connectionCanBeMade(ConnectionInterface $connection): bool
@@ -159,7 +158,7 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Verify the app key validity.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return $this
      */
     protected function verifyAppKey(ConnectionInterface $connection)
@@ -168,7 +167,7 @@ class WebSocketHandler implements MessageComponentInterface
 
         $appKey = $query->get('appKey');
 
-        if (! $app = App::findByKey($appKey)) {
+        if (!$app = App::findByKey($appKey)) {
             throw new Exceptions\UnknownAppKey($appKey);
         }
 
@@ -180,20 +179,20 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Verify the origin.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return $this
      */
     protected function verifyOrigin(ConnectionInterface $connection)
     {
-        if (! $connection->app->allowedOrigins) {
+        if (!$connection->app->allowedOrigins) {
             return $this;
         }
 
-        $header = (string) ($connection->httpRequest->getHeader('Origin')[0] ?? null);
+        $header = (string)($connection->httpRequest->getHeader('Origin')[0] ?? null);
 
         $origin = parse_url($header, PHP_URL_HOST) ?: $header;
 
-        if (! $header || ! in_array($origin, $connection->app->allowedOrigins)) {
+        if (!$header || !in_array($origin, $connection->app->allowedOrigins)) {
             throw new Exceptions\OriginNotAllowed($connection->app->key);
         }
 
@@ -203,12 +202,12 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Limit the connections count by the app.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return $this
      */
     protected function limitConcurrentConnections(ConnectionInterface $connection)
     {
-        if (! is_null($capacity = $connection->app->capacity)) {
+        if (!is_null($capacity = $connection->app->capacity)) {
             $this->channelManager
                 ->getGlobalConnectionsCount($connection->app->id)
                 ->then(function ($connectionsCount) use ($capacity, $connection) {
@@ -228,7 +227,7 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Create a socket id.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return $this
      */
     protected function generateSocketId(ConnectionInterface $connection)
@@ -243,7 +242,7 @@ class WebSocketHandler implements MessageComponentInterface
     /**
      * Establish connection with the client.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
      * @return $this
      */
     protected function establishConnection(ConnectionInterface $connection)

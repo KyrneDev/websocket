@@ -14,6 +14,8 @@ use Flarum\Extend\Event;
 use Flarum\Extend\Settings;
 use Flarum\Notification\Event\Sending;
 use Flarum\Post\Event\Posted;
+use Kyrne\Websocket\Api\Controllers\AuthController;
+use Kyrne\Websocket\Api\Controllers\TypingWebsocketController;
 use Kyrne\Websocket\Provider\AppProvider;
 use Kyrne\Websocket\WebsocketNotificationDriver;
 use Kyrne\Websocket\Extend\GenerateApp;
@@ -52,12 +54,14 @@ return [
 
     (new Frontend('admin'))
         ->js(__DIR__ . '/js/dist/admin.js')
-        ->css(__DIR__ . '/less/admin.less'),
+        ->css(__DIR__ . '/less/admin.less')
+        ->content(AddStatsData::class),
 
     new Locales(__DIR__ . '/resources/locale'),
 
     (new Routes('api'))
-        ->post('/websocket/auth', 'websocket.auth', Api\Controller\AuthController::class),
+        ->post('/posts/typing', 'posts.typing', TypingWebsocketController::class)
+        ->post('/websocket/auth', 'websocket.auth', AuthController::class),
     (new ServiceProvider())
         ->register(AppProvider::class)
 ];

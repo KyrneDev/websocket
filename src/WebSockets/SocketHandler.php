@@ -12,11 +12,13 @@
 
 namespace Kyrne\Websocket\WebSockets;
 
+use BeyondCode\LaravelWebSockets\Facades\StatisticsCollector;
 use BeyondCode\LaravelWebSockets\Server\Messages\PusherMessageFactory;
 use BeyondCode\LaravelWebSockets\Server\WebSocketHandler;
 use BeyondCode\LaravelWebSockets\Server\Messages\PusherClientMessage;
 use BeyondCode\LaravelWebSockets\Contracts\PusherMessage;
 use BeyondCode\LaravelWebSockets\Contracts\ChannelManager;
+use BeyondCode\LaravelWebSockets\Statistics\Collectors\MemoryCollector;
 use Illuminate\Support\Str;
 use Ratchet\ConnectionInterface;
 use Ratchet\RFC6455\Messaging\MessageInterface;
@@ -25,9 +27,22 @@ use Kyrne\Websocket\WebSockets\Messages\PusherChannelProtocolMessage;
 class SocketHandler extends WebSocketHandler
 {
 
+    /**
+     * @var MemoryCollector
+     */
+    protected $collector;
+
+    public function __construct(MemoryCollector $collector, ChannelManager $channelManager)
+    {
+        $this->collector = $collector;
+        parent::__construct($channelManager);
+    }
+
     public function onMessage(ConnectionInterface $connection, MessageInterface $message)
     {
         $message = $this->createForMessage($message, $connection, $this->channelManager);
+
+        $this->collector->webSocketMessage($connection->app->id);
 
         $message->respond();
     }
@@ -44,6 +59,8 @@ class SocketHandler extends WebSocketHandler
             ->establishConnection($connection);
 
         if (isset($connection->app)) {
+            $this->collector->connection($connection->app->id);
+
             $this->channelManager->subscribeToApp($connection->app->id);
 
             $this->channelManager->connectionPonged($connection);
@@ -57,6 +74,8 @@ class SocketHandler extends WebSocketHandler
             ->then(function () use ($connection) {
                 $this->channelManager->unsubscribeFromApp($connection->app->id);
             });
+
+        $this->collector->disconnection($connection->app->id);
     }
 
     public static function createForMessage(

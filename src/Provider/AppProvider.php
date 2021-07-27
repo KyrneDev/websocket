@@ -14,8 +14,11 @@ namespace Kyrne\Websocket\Provider;
 
 use BeyondCode\LaravelWebSockets\Apps\App;
 use BeyondCode\LaravelWebSockets\Contracts\AppManager as Contract;
+use BeyondCode\LaravelWebSockets\Contracts\StatisticsStore;
 use BeyondCode\LaravelWebSockets\Server\Logger\WebsocketsLogger;
 use BeyondCode\LaravelWebSockets\Server\Router;
+use BeyondCode\LaravelWebSockets\Statistics\Collectors\MemoryCollector;
+use BeyondCode\LaravelWebSockets\Statistics\Stores\DatabaseStore;
 use Flarum\Foundation\Config;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository;
@@ -41,6 +44,14 @@ class AppProvider extends ServiceProvider
     {
         $this->app->singleton('websockets.router', function () {
             return new Router();
+        });
+
+        $this->app->singleton(StatisticsStore::class, function ($app) {
+            return new DatabaseStore;
+        });
+
+        $this->app->singleton(MemoryCollector::class, function ($app) {
+           return new MemoryCollector;
         });
 
         $this->app->bind(Contract::class, function () {

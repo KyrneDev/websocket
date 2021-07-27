@@ -7,3 +7,100 @@
     margin-bottom: 0;
   }
 }
+
+.UsersOnline {
+  margin-left: -20px;
+}
+
+.UsersOnline-title {
+  margin-top: 12px;
+  color: @muted-color;
+}
+
+@media @phone {
+  .item-viewing {
+    display: none;
+  }
+}
+
+.UsersOnline-list {
+  width: 140%;
+}
+
+.UsersOnline-list, .ReplyPlaceholder-typers-list {
+  list-style: none;
+  padding-left: 0;
+  padding-right: 15px;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+
+  .UsersOnline-item, .ReplyPlaceholder-typers-item {
+    margin-bottom: 10px;
+    flex: 1 1;
+    flex-basis: auto;
+
+    .Avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 26px;
+      font-size: 13px;
+      line-height: 26px;
+      margin-top: 0;
+    }
+
+    .username {
+      margin-left: 8px;
+      color: @muted-color;
+    }
+
+    .tiblock {
+      display: inline-block;
+      margin-left: 5px;
+    }
+
+    .tidot {
+      -webkit-animation: mercuryTypingAnimation 1.5s infinite ease-in-out;
+      border-radius: 7px;
+      display: inline-block;
+      height: 7px;
+      margin-right: 2px;
+      width: 7px;
+      background-color: @primary-color;
+    }
+
+    @-webkit-keyframes mercuryTypingAnimation{
+      0%{
+        -webkit-transform:translateY(0px)
+      }
+      28%{
+        -webkit-transform:translateY(-5px)
+      }
+      44%{
+        -webkit-transform:translateY(0px)
+      }
+    }
+
+    .tidot:nth-child(1){
+      -webkit-animation-delay:200ms;
+    }
+    .tidot:nth-child(2){
+      -webkit-animation-delay:300ms;
+    }
+    .tidot:nth-child(3){
+      -webkit-animation-delay:400ms;
+    }
+  }
+}
+
+.UsersOnline-item>.username {
+  vertical-align: sub;
+}
+
+.ReplyPlaceholder-typers-item>.username {
+  vertical-align: middle;
+}
+
+.DiscussionPage-nav > ul.websocket-nav {
+  margin-top: -120px;
+}

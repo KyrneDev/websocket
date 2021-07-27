@@ -17,6 +17,7 @@ use BeyondCode\LaravelWebSockets\API\FetchChannel;
 use BeyondCode\LaravelWebSockets\API\FetchChannels;
 use BeyondCode\LaravelWebSockets\API\FetchUsers;
 use BeyondCode\LaravelWebSockets\ServerFactory;
+use BeyondCode\LaravelWebSockets\Statistics\Collectors\MemoryCollector;
 use Illuminate\Support\Str;
 use BeyondCode\LaravelWebSockets\Contracts\ChannelManager;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -55,6 +56,10 @@ class WebsocketServer extends StartServer
 
         $setting = $settings->get("kyrne-websocket.app_{$option}");
 
+        if (!$setting && $option === 'statistics-interval' && !$input) {
+            return 7200;
+        }
+
         return !empty($setting) ? $setting : $input;
     }
 
@@ -68,6 +73,11 @@ class WebsocketServer extends StartServer
         $this->input->setOption(
             'host',
             $host = $this->supersedeOption('host')
+        );
+
+        $this->input->setOption(
+            'statistics-interval',
+            $this->supersedeOption('statistics-interval')
         );
 
         $setting = app('flarum.settings');
@@ -86,6 +96,8 @@ class WebsocketServer extends StartServer
 
         $this->configureManagers();
 
+        $this->configureStatistics();
+
         $this->registerEchoRoutes();
 
         $this->configurePongTracker();
@@ -103,6 +115,23 @@ class WebsocketServer extends StartServer
         app()->singleton(ChannelManager::class, function () {
             return new LocalChannelManager($this->loop);
         });
+    }
+
+    protected function configureStatistics()
+    {
+        if (! $this->option('disable-statistics')) {
+
+            $intervalInSeconds = $this->option('statistics-interval');
+
+            echo($intervalInSeconds);
+
+            $this->loop->addPeriodicTimer($intervalInSeconds, function () {
+                $this->line('Saving statistics...');
+                $collector = app(MemoryCollector::class);
+
+                $collector->save();
+            });
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import DiscussionList from 'flarum/components/DiscussionList';
 import DiscussionPage from 'flarum/components/DiscussionPage';
 import IndexPage from 'flarum/components/IndexPage';
 import Button from 'flarum/components/Button';
+import PresenceChannel from './PresenceChannel';
 
 app.initializers.add('kyrne-websocket', () => {
 
@@ -38,8 +39,11 @@ app.initializers.add('kyrne-websocket', () => {
         socket.connection.bind('state_change', (state) => app.socketStatus = state.current);
 
         return resolve({
-          main: socket.subscribe('public'),
-          user: app.session.user ? socket.subscribe('private-user' + app.session.user.id()) : null
+          channels: {
+            main: socket.subscribe('public'),
+            user: app.session.user ? socket.subscribe('private-user' + app.session.user.id()) : null
+          },
+          pusher: socket,
         });
       });
     }
@@ -49,7 +53,8 @@ app.initializers.add('kyrne-websocket', () => {
   app.pushedUpdates = [];
 
   extend(DiscussionList.prototype, 'oncreate', function (vnode) {
-    app.pusher.then(channels => {
+    app.pusher.then(object => {
+      const channels = object.channels;
       Object.keys(channels).map((channel) => {
         if (channels[channel] === null) return;
         channels[channel].bind('newPost', data => {
@@ -99,7 +104,8 @@ app.initializers.add('kyrne-websocket', () => {
   });
 
   extend(DiscussionList.prototype, 'onremove', function (vnode) {
-    app.pusher.then(channels => {
+    app.pusher.then(object => {
+      const channels = object.channels;
       Object.keys(channels).map((channel) => {
         if (channels[channel] === null) return;
         channels[channel].unbind('newPost');
@@ -162,7 +168,8 @@ app.initializers.add('kyrne-websocket', () => {
   });
 
   extend(DiscussionPage.prototype, 'oncreate', function () {
-    app.pusher.then(channels => {
+    app.pusher.then(object => {
+      const channels = object.channels;
       Object.keys(channels).map((channel) => {
         if (channels[channel] === null) return;
         channels[channel].bind('newPost', data => {
@@ -190,7 +197,8 @@ app.initializers.add('kyrne-websocket', () => {
   });
 
   extend(DiscussionPage.prototype, 'onremove', function () {
-    app.pusher.then(channels => {
+    app.pusher.then(object => {
+      const channels = object.channels;
       Object.keys(channels).map((channel) => {
         if (channels[channel] === null) return;
         channels[channel].unbind('newPost');
@@ -202,7 +210,8 @@ app.initializers.add('kyrne-websocket', () => {
     items.remove('refresh');
   });
 
-  app.pusher.then(channels => {
+  app.pusher.then(object => {
+    const channels = object.channels;
     if (channels.user) {
       channels.user.bind('notification', () => {
         app.session.user.pushAttributes({
@@ -214,4 +223,6 @@ app.initializers.add('kyrne-websocket', () => {
       });
     }
   });
+
+  PresenceChannel();
 });

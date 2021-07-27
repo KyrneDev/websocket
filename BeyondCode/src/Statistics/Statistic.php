@@ -122,7 +122,7 @@ class Statistic
      */
     public function isEnabled(): bool
     {
-        return App::findById($this->appId)->statisticsEnabled;
+        return true;
     }
 
     /**

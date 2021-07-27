@@ -3,8 +3,8 @@
 namespace BeyondCode\LaravelWebSockets\Statistics\Stores;
 
 use BeyondCode\LaravelWebSockets\Contracts\StatisticsStore;
+use BeyondCode\LaravelWebSockets\Models\WebSocketsStatisticsEntry;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class DatabaseStore implements StatisticsStore
@@ -14,7 +14,8 @@ class DatabaseStore implements StatisticsStore
      *
      * @var string
      */
-    public static $model = \BeyondCode\LaravelWebSockets\Models\WebSocketsStatisticsEntry::class;
+    public static $model = WebSocketsStatisticsEntry::class;
+
 
     /**
      * Store a new record in the database and return
@@ -25,7 +26,13 @@ class DatabaseStore implements StatisticsStore
      */
     public static function store(array $data)
     {
-        return static::$model::create($data);
+        $stat = static::$model::build($data);
+
+        $stat->save();
+
+        (new self)->delete(Carbon::now()->subDays(10));
+
+        return $stat;
     }
 
     /**
@@ -58,7 +65,7 @@ class DatabaseStore implements StatisticsStore
             ->when(! is_null($processQuery), function ($query) use ($processQuery) {
                 return call_user_func($processQuery, $query);
             }, function ($query) {
-                return $query->latest()->limit(120);
+                return $query->latest()->limit(20);
             })->get();
     }
 
@@ -75,7 +82,7 @@ class DatabaseStore implements StatisticsStore
             ->when(! is_null($processCollection), function ($collection) use ($processCollection) {
                 return call_user_func($processCollection, $collection);
             })
-            ->map(function (Model $statistic) {
+            ->map(function (WebSocketsStatisticsEntry $statistic) {
                 return $this->statisticToArray($statistic);
             })
             ->toArray();
@@ -99,18 +106,16 @@ class DatabaseStore implements StatisticsStore
     }
 
     /**
-     * Turn the statistic model to an array.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $statistic
+     * @param WebSocketsStatisticsEntry $statistic
      * @return array
      */
-    protected function statisticToArray(Model $statistic): array
+    protected function statisticToArray(WebSocketsStatisticsEntry $statistic): array
     {
         return [
             'timestamp' => (string) $statistic->created_at,
-            'peak_connections_count' => $statistic->peak_connections_count,
-            'websocket_messages_count' => $statistic->websocket_messages_count,
-            'api_messages_count' => $statistic->api_messages_count,
+            'peak_connection_count' => $statistic->peak_connection_count,
+            'websocket_message_count' => $statistic->websocket_message_count,
+            'api_message_count' => $statistic->api_message_count,
         ];
     }
 
@@ -125,16 +130,12 @@ class DatabaseStore implements StatisticsStore
         return [
             'peak_connections' => [
                 'x' => $statistics->pluck('timestamp')->toArray(),
-                'y' => $statistics->pluck('peak_connections_count')->toArray(),
+                'y' => $statistics->pluck('peak_connection_count')->toArray(),
             ],
             'websocket_messages_count' => [
                 'x' => $statistics->pluck('timestamp')->toArray(),
-                'y' => $statistics->pluck('websocket_messages_count')->toArray(),
-            ],
-            'api_messages_count' => [
-                'x' => $statistics->pluck('timestamp')->toArray(),
-                'y' => $statistics->pluck('api_messages_count')->toArray(),
-            ],
+                'y' => $statistics->pluck('websocket_message_count')->toArray(),
+            ]
         ];
     }
 }

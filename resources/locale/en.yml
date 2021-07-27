@@ -7,12 +7,20 @@ kyrne-websocket:
         discussion_list:
             show_updates_text: "{count, plural, one {Show # updated discussion} other {Show # updated discussions}}"
 
+    # These translations are used on the discussion page nav.
+        discussion_page:
+            viewing_title: "Here now:"
+
     ##
     # UNIQUE KEYS - The following keys are used in only one location each.
     ##
 
     # Translations in this namespace are used by the admin interface.
     admin:
+
+        # These translations are used in the Websockets graph.
+        chart:
+            title: Websocket Statistics
 
         # These translations are used in the Websockets Settings modal dialog.
         pusher_settings:
@@ -26,6 +34,7 @@ kyrne-websocket:
             auto_update: Auto Update Discussions
             app_key_label: App Key
             app_secret_label: App Secret
+            stats_label: Statistics Interval
             secure: Force wss/https for Websocket
             title: Websocket/Pusher Settings
             reverse_proxy: Reverse Proxy Support
@@ -33,6 +42,7 @@ kyrne-websocket:
 
       # These translations are used in the Websockets Settings modal dialog for help texts.
         help:
+            stats: "The time between statistics saves - in seconds. Recommended between 3600 (1 hour) and 21600 (6 hours) Default: 7200."
             auto_update: Don't show the yellow update banner, immediately update the discussion list.
             app_id: Pusher App ID - leave as is if using built-in websocket server.
             app_key: Pusher App Key - leave as is if using built-in websocket server.

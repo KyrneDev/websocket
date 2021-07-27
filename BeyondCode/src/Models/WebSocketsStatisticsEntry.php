@@ -2,17 +2,32 @@
 
 namespace BeyondCode\LaravelWebSockets\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use Flarum\Database\AbstractModel;
 
-class WebSocketsStatisticsEntry extends Model
+class WebSocketsStatisticsEntry extends AbstractModel
 {
     /**
      * {@inheritdoc}
      */
     protected $table = 'websockets_statistics_entries';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected $guarded = [];
+    protected $dates = [
+        'created_at',
+        'updated_at'
+    ];
+
+    public static function build(array $data)
+    {
+        $stat = new static;
+
+        $stat->app_id = $data['app_id'];
+        $stat->peak_connection_count = $data['peak_connection_count'];
+        $stat->websocket_message_count = $data['websocket_message_count'];
+        $stat->api_message_count = $data['api_message_count'];
+        $stat->created_at = Carbon::now();
+        $stat->updated_at = Carbon::now();
+
+        return $stat;
+    }
 }

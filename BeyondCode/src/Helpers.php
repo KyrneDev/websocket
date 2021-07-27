@@ -2,6 +2,7 @@
 
 namespace BeyondCode\LaravelWebSockets;
 
+use React\Promise\FulfilledPromise;
 use React\Promise\PromiseInterface;
 
 class Helpers
@@ -41,9 +42,7 @@ class Helpers
      */
     public static function createFulfilledPromise($value): PromiseInterface
     {
-        $resolver = config(
-            'websockets.promise_resolver', \React\Promise\FulfilledPromise::class
-        );
+        $resolver = app(FulfilledPromise::class);
 
         return new $resolver($value, static::$loop);
     }
