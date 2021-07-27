@@ -13,7 +13,8 @@ class FetchChannels extends Controller
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
@@ -23,7 +24,7 @@ class FetchChannels extends Controller
         if ($request->has('info')) {
             $attributes = explode(',', trim($request->info));
 
-            if (in_array('user_count', $attributes) && ! Str::startsWith($request->filter_by_prefix, 'presence-')) {
+            if (in_array('user_count', $attributes) && !Str::startsWith($request->filter_by_prefix, 'presence-')) {
                 throw new HttpException(400, 'Request must be limited to presence channels in order to fetch user_count');
             }
         }
@@ -53,7 +54,7 @@ class FetchChannels extends Controller
                     ->getChannelsMembersCount($request->appId, $channelNames)
                     ->then(function ($counts) use ($channels, $attributes) {
                         $channels = $channels->map(function ($channel) use ($counts, $attributes) {
-                            $info = new stdClass;
+                            $info = new stdClass();
 
                             $channelName = $channel instanceof Channel
                                 ? $channel->getName()
@@ -69,7 +70,7 @@ class FetchChannels extends Controller
                         })->all();
 
                         return [
-                            'channels' => $channels ?: new stdClass,
+                            'channels' => $channels ?: new stdClass(),
                         ];
                     });
             });

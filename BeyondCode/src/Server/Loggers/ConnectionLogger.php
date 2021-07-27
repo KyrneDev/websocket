@@ -16,7 +16,8 @@ class ConnectionLogger extends Logger implements ConnectionInterface
     /**
      * Create a new instance and add a connection to watch.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return self
      */
     public static function decorate(ConnectionInterface $app): self
@@ -29,7 +30,8 @@ class ConnectionLogger extends Logger implements ConnectionInterface
     /**
      * Set a new connection to watch.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return $this
      */
     public function setConnection(ConnectionInterface $connection)
@@ -42,7 +44,8 @@ class ConnectionLogger extends Logger implements ConnectionInterface
     /**
      * Send data through the connection.
      *
-     * @param  string  $data
+     * @param string $data
+     *
      * @return void
      */
     public function send($data)

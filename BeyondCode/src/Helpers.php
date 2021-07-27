@@ -18,7 +18,8 @@ class Helpers
      * Transform the Redis' list of key after value
      * to key-value pairs.
      *
-     * @param  array  $list
+     * @param array $list
+     *
      * @return array
      */
     public static function redisListToArray(array $list)
@@ -37,7 +38,8 @@ class Helpers
     /**
      * Create a new fulfilled promise with a value.
      *
-     * @param  mixed  $value
+     * @param mixed $value
+     *
      * @return \React\Promise\PromiseInterface
      */
     public static function createFulfilledPromise($value): PromiseInterface

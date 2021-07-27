@@ -11,7 +11,8 @@ class TriggerEvent extends Controller
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
@@ -28,13 +29,14 @@ class TriggerEvent extends Controller
             // then the message simply will get broadcasted
             // across the other servers.
             $channel = $this->channelManager->find(
-                $request->appId, $channelName
+                $request->appId,
+                $channelName
             );
 
             $payload = [
-                'event' => $request->name,
+                'event'   => $request->name,
                 'channel' => $channelName,
-                'data' => $request->data,
+                'data'    => $request->data,
             ];
 
             if ($channel) {
@@ -46,7 +48,10 @@ class TriggerEvent extends Controller
             }
 
             $this->channelManager->broadcastAcrossServers(
-                $request->appId, $request->socket_id, $channelName, (object) $payload
+                $request->appId,
+                $request->socket_id,
+                $channelName,
+                (object) $payload
             );
 
             if ($this->app->statisticsEnabled) {
@@ -54,7 +59,7 @@ class TriggerEvent extends Controller
             }
 
             DashboardLogger::log($request->appId, DashboardLogger::TYPE_API_MESSAGE, [
-                'event' => $request->name,
+                'event'   => $request->name,
                 'channel' => $channelName,
                 'payload' => $request->data,
             ]);

@@ -18,7 +18,8 @@ class HttpLogger extends Logger implements MessageComponentInterface
     /**
      * Create a new instance and add the app to watch.
      *
-     * @param  \Ratchet\MessageComponentInterface  $app
+     * @param \Ratchet\MessageComponentInterface $app
+     *
      * @return self
      */
     public static function decorate(MessageComponentInterface $app): self
@@ -31,7 +32,8 @@ class HttpLogger extends Logger implements MessageComponentInterface
     /**
      * Set a new app to watch.
      *
-     * @param  \Ratchet\MessageComponentInterface  $app
+     * @param \Ratchet\MessageComponentInterface $app
+     *
      * @return $this
      */
     public function setApp(MessageComponentInterface $app)
@@ -44,7 +46,8 @@ class HttpLogger extends Logger implements MessageComponentInterface
     /**
      * Handle the HTTP open request.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     public function onOpen(ConnectionInterface $connection)
@@ -55,8 +58,9 @@ class HttpLogger extends Logger implements MessageComponentInterface
     /**
      * Handle the HTTP message request.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  mixed  $message
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param mixed                        $message
+     *
      * @return void
      */
     public function onMessage(ConnectionInterface $connection, $message)
@@ -67,7 +71,8 @@ class HttpLogger extends Logger implements MessageComponentInterface
     /**
      * Handle the HTTP close request.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
+     * @param \Ratchet\ConnectionInterface $connection
+     *
      * @return void
      */
     public function onClose(ConnectionInterface $connection)
@@ -78,8 +83,9 @@ class HttpLogger extends Logger implements MessageComponentInterface
     /**
      * Handle HTTP errors.
      *
-     * @param  \Ratchet\ConnectionInterface  $connection
-     * @param  Exception  $exception
+     * @param \Ratchet\ConnectionInterface $connection
+     * @param Exception                    $exception
+     *
      * @return void
      */
     public function onError(ConnectionInterface $connection, Exception $exception)

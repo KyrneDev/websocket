@@ -36,7 +36,8 @@ class CleanStatistics extends Command
         $days = $this->option('days') ?: config('statistics.delete_statistics_older_than_days');
 
         $amountDeleted = StatisticsStore::delete(
-            now()->subDays($days), $this->argument('appId')
+            now()->subDays($days),
+            $this->argument('appId')
         );
 
         $this->info("Deleted {$amountDeleted} record(s) from the WebSocket statistics storage.");

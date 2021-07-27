@@ -8,7 +8,8 @@ use stdClass;
 
 class UnsubscribedFromChannel
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * The WebSockets app id that the user connected to.
@@ -41,10 +42,11 @@ class UnsubscribedFromChannel
     /**
      * Create a new event instance.
      *
-     * @param  string  $appId
-     * @param  string  $socketId
-     * @param  string  $channelName
-     * @param  stdClass|null  $user
+     * @param string        $appId
+     * @param string        $socketId
+     * @param string        $channelName
+     * @param stdClass|null $user
+     *
      * @return void
      */
     public function __construct(string $appId, string $socketId, string $channelName, ?stdClass $user = null)

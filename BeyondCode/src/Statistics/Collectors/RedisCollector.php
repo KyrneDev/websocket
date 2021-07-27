@@ -50,7 +50,8 @@ class RedisCollector extends MemoryCollector
     /**
      * Handle the incoming websocket message.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function webSocketMessage($appId)
@@ -62,7 +63,8 @@ class RedisCollector extends MemoryCollector
     /**
      * Handle the incoming API message.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function apiMessage($appId)
@@ -74,7 +76,8 @@ class RedisCollector extends MemoryCollector
     /**
      * Handle the new conection.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function connection($appId)
@@ -83,7 +86,8 @@ class RedisCollector extends MemoryCollector
         $this->ensureAppIsInSet($appId)
             ->hincrby(
                 $this->channelManager->getStatsRedisHash($appId, null),
-                'current_connections_count', 1
+                'current_connections_count',
+                1
             )
             ->then(function ($currentConnectionsCount) use ($appId) {
                 // Get the peak connections count from Redis.
@@ -105,7 +109,8 @@ class RedisCollector extends MemoryCollector
                             ->getPublishClient()
                             ->hset(
                                 $this->channelManager->getStatsRedisHash($appId, null),
-                                'peak_connections_count', $peakConnectionsCount
+                                'peak_connections_count',
+                                $peakConnectionsCount
                             );
                     });
             });
@@ -114,7 +119,8 @@ class RedisCollector extends MemoryCollector
     /**
      * Handle disconnections.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function disconnection($appId)
@@ -139,7 +145,8 @@ class RedisCollector extends MemoryCollector
                             ->getPublishClient()
                             ->hset(
                                 $this->channelManager->getStatsRedisHash($appId, null),
-                                'peak_connections_count', $peakConnectionsCount
+                                'peak_connections_count',
+                                $peakConnectionsCount
                             );
                     });
             });
@@ -162,12 +169,13 @@ class RedisCollector extends MemoryCollector
                             ->getPublishClient()
                             ->hgetall($this->channelManager->getStatsRedisHash($appId, null))
                             ->then(function ($list) use ($appId) {
-                                if (! $list) {
+                                if (!$list) {
                                     return;
                                 }
 
                                 $statistic = $this->arrayToStatisticInstance(
-                                    $appId, Helpers::redisListToArray($list)
+                                    $appId,
+                                    Helpers::redisListToArray($list)
                                 );
 
                                 if ($statistic->shouldHaveTracesRemoved()) {
@@ -222,7 +230,8 @@ class RedisCollector extends MemoryCollector
                         ->hgetall($this->channelManager->getStatsRedisHash($appId, null))
                         ->then(function ($list) use ($appId, &$appsWithStatistics) {
                             $appsWithStatistics[$appId] = $this->arrayToStatisticInstance(
-                                $appId, Helpers::redisListToArray($list)
+                                $appId,
+                                Helpers::redisListToArray($list)
                             );
                         });
                 }
@@ -234,7 +243,8 @@ class RedisCollector extends MemoryCollector
     /**
      * Get the saved statistics for an app.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return PromiseInterface[\BeyondCode\LaravelWebSockets\Statistics\Statistic|null]
      */
     public function getAppStatistics($appId): PromiseInterface
@@ -244,7 +254,8 @@ class RedisCollector extends MemoryCollector
             ->hgetall($this->channelManager->getStatsRedisHash($appId, null))
             ->then(function ($list) use ($appId) {
                 return $this->arrayToStatisticInstance(
-                    $appId, Helpers::redisListToArray($list)
+                    $appId,
+                    Helpers::redisListToArray($list)
                 );
             });
     }
@@ -252,8 +263,9 @@ class RedisCollector extends MemoryCollector
     /**
      * Reset the statistics to a specific connection count.
      *
-     * @param  string|int  $appId
-     * @param  int  $currentConnectionCount
+     * @param string|int $appId
+     * @param int        $currentConnectionCount
+     *
      * @return void
      */
     public function resetStatistics($appId, int $currentConnectionCount)
@@ -262,28 +274,32 @@ class RedisCollector extends MemoryCollector
             ->getPublishClient()
             ->hset(
                 $this->channelManager->getStatsRedisHash($appId, null),
-                'current_connections_count', $currentConnectionCount
+                'current_connections_count',
+                $currentConnectionCount
             );
 
         $this->channelManager
             ->getPublishClient()
             ->hset(
                 $this->channelManager->getStatsRedisHash($appId, null),
-                'peak_connections_count', max(0, $currentConnectionCount)
+                'peak_connections_count',
+                max(0, $currentConnectionCount)
             );
 
         $this->channelManager
             ->getPublishClient()
             ->hset(
                 $this->channelManager->getStatsRedisHash($appId, null),
-                'websocket_messages_count', 0
+                'websocket_messages_count',
+                0
             );
 
         $this->channelManager
             ->getPublishClient()
             ->hset(
                 $this->channelManager->getStatsRedisHash($appId, null),
-                'api_messages_count', 0
+                'api_messages_count',
+                0
             );
     }
 
@@ -291,7 +307,8 @@ class RedisCollector extends MemoryCollector
      * Remove all app traces from the database if no connections have been set
      * in the meanwhile since last save.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function resetAppTraces($appId)
@@ -334,7 +351,8 @@ class RedisCollector extends MemoryCollector
     /**
      * Ensure the app id is stored in the Redis database.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return \Clue\React\Redis\Client
      */
     protected function ensureAppIsInSet($appId)
@@ -359,8 +377,9 @@ class RedisCollector extends MemoryCollector
     /**
      * Transform a key-value pair to a Statistic instance.
      *
-     * @param  string|int  $appId
-     * @param  array  $stats
+     * @param string|int $appId
+     * @param array      $stats
+     *
      * @return \BeyondCode\LaravelWebSockets\Statistics\Statistic
      */
     protected function arrayToStatisticInstance($appId, array $stats)

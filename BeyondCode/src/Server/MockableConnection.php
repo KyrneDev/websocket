@@ -10,13 +10,14 @@ class MockableConnection implements ConnectionInterface
     /**
      * Create a new Mockable connection.
      *
-     * @param  string|int  $appId
-     * @param  string  $socketId
+     * @param string|int $appId
+     * @param string     $socketId
+     *
      * @return void
      */
     public function __construct($appId, string $socketId)
     {
-        $this->app = new stdClass;
+        $this->app = new stdClass();
 
         $this->app->id = $appId;
         $this->socketId = $socketId;
@@ -25,7 +26,8 @@ class MockableConnection implements ConnectionInterface
     /**
      * Send data to the connection.
      *
-     * @param  string  $data
+     * @param string $data
+     *
      * @return \Ratchet\ConnectionInterface
      */
     public function send($data)

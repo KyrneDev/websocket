@@ -16,12 +16,12 @@ class DatabaseStore implements StatisticsStore
      */
     public static $model = WebSocketsStatisticsEntry::class;
 
-
     /**
      * Store a new record in the database and return
      * the created instance.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return mixed
      */
     public static function store(array $data)
@@ -30,7 +30,7 @@ class DatabaseStore implements StatisticsStore
 
         $stat->save();
 
-        (new self)->delete(Carbon::now()->subDays(10));
+        (new self())->delete(Carbon::now()->subDays(10));
 
         return $stat;
     }
@@ -40,14 +40,15 @@ class DatabaseStore implements StatisticsStore
      * for a specific app id (if given), returning
      * the amount of deleted records.
      *
-     * @param  \Carbon\Carbon  $moment
-     * @param  string|int|null  $appId
+     * @param \Carbon\Carbon  $moment
+     * @param string|int|null $appId
+     *
      * @return int
      */
     public static function delete(Carbon $moment, $appId = null): int
     {
         return static::$model::where('created_at', '<', $moment->toDateTimeString())
-            ->when(! is_null($appId), function ($query) use ($appId) {
+            ->when(!is_null($appId), function ($query) use ($appId) {
                 return $query->whereAppId($appId);
             })
             ->delete();
@@ -56,13 +57,14 @@ class DatabaseStore implements StatisticsStore
     /**
      * Get the query result as eloquent collection.
      *
-     * @param  callable  $processQuery
+     * @param callable $processQuery
+     *
      * @return \Illuminate\Support\Collection
      */
     public function getRawRecords(callable $processQuery = null)
     {
         return static::$model::query()
-            ->when(! is_null($processQuery), function ($query) use ($processQuery) {
+            ->when(!is_null($processQuery), function ($query) use ($processQuery) {
                 return call_user_func($processQuery, $query);
             }, function ($query) {
                 return $query->latest()->limit(20);
@@ -72,14 +74,15 @@ class DatabaseStore implements StatisticsStore
     /**
      * Get the results for a specific query.
      *
-     * @param  callable  $processQuery
-     * @param  callable  $processCollection
+     * @param callable $processQuery
+     * @param callable $processCollection
+     *
      * @return array
      */
     public function getRecords(callable $processQuery = null, callable $processCollection = null): array
     {
         return $this->getRawRecords($processQuery)
-            ->when(! is_null($processCollection), function ($collection) use ($processCollection) {
+            ->when(!is_null($processCollection), function ($collection) use ($processCollection) {
                 return call_user_func($processCollection, $collection);
             })
             ->map(function (WebSocketsStatisticsEntry $statistic) {
@@ -92,8 +95,9 @@ class DatabaseStore implements StatisticsStore
      * Get the results for a specific query into a
      * format that is easily to read for graphs.
      *
-     * @param  callable  $processQuery
-     * @param  callable  $processCollection
+     * @param callable $processQuery
+     * @param callable $processCollection
+     *
      * @return array
      */
     public function getForGraph(callable $processQuery = null, callable $processCollection = null): array
@@ -107,22 +111,24 @@ class DatabaseStore implements StatisticsStore
 
     /**
      * @param WebSocketsStatisticsEntry $statistic
+     *
      * @return array
      */
     protected function statisticToArray(WebSocketsStatisticsEntry $statistic): array
     {
         return [
-            'timestamp' => (string) $statistic->created_at,
-            'peak_connection_count' => $statistic->peak_connection_count,
+            'timestamp'               => (string) $statistic->created_at,
+            'peak_connection_count'   => $statistic->peak_connection_count,
             'websocket_message_count' => $statistic->websocket_message_count,
-            'api_message_count' => $statistic->api_message_count,
+            'api_message_count'       => $statistic->api_message_count,
         ];
     }
 
     /**
      * Turn the statistics collection to an array used for graph.
      *
-     * @param  \Illuminate\Support\Collection  $statistics
+     * @param \Illuminate\Support\Collection $statistics
+     *
      * @return array
      */
     protected function statisticsToGraph(Collection $statistics): array
@@ -135,7 +141,7 @@ class DatabaseStore implements StatisticsStore
             'websocket_messages_count' => [
                 'x' => $statistics->pluck('timestamp')->toArray(),
                 'y' => $statistics->pluck('websocket_message_count')->toArray(),
-            ]
+            ],
         ];
     }
 }

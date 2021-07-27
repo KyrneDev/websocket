@@ -10,8 +10,9 @@ class AppId implements Rule
     /**
      * Create a new rule.
      *
-     * @param  mixed  $attribute
-     * @param  mixed  $value
+     * @param mixed $attribute
+     * @param mixed $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)

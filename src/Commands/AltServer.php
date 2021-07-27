@@ -1,13 +1,11 @@
 <?php
 /**
- *
- *  This file is part of kyrne/websocket
+ *  This file is part of kyrne/websocket.
  *
  *  Copyright (c) 2020 Charlie Kern.
  *
  *  For the full copyright and license information, please view the EULA.md
  *  file that was distributed with this source code.
- *
  */
 
 namespace Kyrne\Websocket\Commands;
@@ -44,9 +42,9 @@ class AltServer extends AbstractCommand
             $ssl = true;
         }
 
-        $ssl = (bool)$setting->get('kyrne-websocket.reverse_proxy') ? false : $ssl;
+        $ssl = (bool) $setting->get('kyrne-websocket.reverse_proxy') ? false : $ssl;
 
-        $process = new Process([__DIR__ . "/../../poxa-" . PHP_OS . "/bin/poxa.sh", "start", $id, $key, $secret, $port, ($ssl ? "true " : "false"), $cert, $pk]);
+        $process = new Process([__DIR__.'/../../poxa-'.PHP_OS.'/bin/poxa.sh', 'start', $id, $key, $secret, $port, ($ssl ? 'true ' : 'false'), $cert, $pk]);
         $process->setTimeout(0);
 
         $process->start();

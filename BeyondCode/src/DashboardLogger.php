@@ -43,9 +43,10 @@ class DashboardLogger
     /**
      * Log an event for an app.
      *
-     * @param  mixed  $appId
-     * @param  string  $type
-     * @param  array  $details
+     * @param mixed  $appId
+     * @param string $type
+     * @param array  $details
+     *
      * @return void
      */
     public static function log($appId, string $type, array $details = [])
@@ -55,11 +56,11 @@ class DashboardLogger
         $channelName = static::LOG_CHANNEL_PREFIX.$type;
 
         $payload = [
-            'event' => 'log-message',
+            'event'   => 'log-message',
             'channel' => $channelName,
-            'data' => [
-                'type' => $type,
-                'time' => strftime('%H:%M:%S'),
+            'data'    => [
+                'type'    => $type,
+                'time'    => strftime('%H:%M:%S'),
                 'details' => $details,
             ],
         ];
@@ -72,12 +73,16 @@ class DashboardLogger
 
         if ($channel) {
             $channel->broadcastLocally(
-                $appId, (object) $payload
+                $appId,
+                (object) $payload
             );
         }
 
         $channelManager->broadcastAcrossServers(
-            $appId, null, $channelName, (object) $payload
+            $appId,
+            null,
+            $channelName,
+            (object) $payload
         );
     }
 }

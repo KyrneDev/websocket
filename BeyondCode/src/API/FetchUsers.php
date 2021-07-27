@@ -11,12 +11,13 @@ class FetchUsers extends Controller
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
     {
-        if (! Str::startsWith($request->channelName, 'presence-')) {
+        if (!Str::startsWith($request->channelName, 'presence-')) {
             return new HttpException(400, "Invalid presence channel `{$request->channelName}`");
         }
 

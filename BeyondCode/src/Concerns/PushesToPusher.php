@@ -10,7 +10,8 @@ trait PushesToPusher
     /**
      * Get the right Pusher broadcaster for the used driver.
      *
-     * @param  array  $app
+     * @param array $app
+     *
      * @return \Illuminate\Broadcasting\Broadcasters\Broadcaster
      */
     public function getPusherBroadcaster(array $app)

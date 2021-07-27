@@ -6,8 +6,8 @@ use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 use Pusher\Pusher;
+use Tobscure\JsonApi\Document;
 
 class TypingWebsocketController extends AbstractShowController
 {
@@ -28,10 +28,10 @@ class TypingWebsocketController extends AbstractShowController
         $data = $request->getParsedBody();
         $actor = RequestUtil::getActor($request);
 
-        $this->pusher->trigger('presence-' . $data['discussionId'], 'typing', [
-            'userId' => $actor->id,
+        $this->pusher->trigger('presence-'.$data['discussionId'], 'typing', [
+            'userId'    => $actor->id,
             'avatarUrl' => $actor->avatar_url,
-            'username' => $actor->username,
+            'username'  => $actor->username,
         ]);
 
         return true;

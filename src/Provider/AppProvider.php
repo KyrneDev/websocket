@@ -1,13 +1,11 @@
 <?php
 /**
- *
- *  This file is part of kyrne/websocket
+ *  This file is part of kyrne/websocket.
  *
  *  Copyright (c) 2020 Charlie Kern.
  *
  *  For the full copyright and license information, please view the EULA.md
  *  file that was distributed with this source code.
- *
  */
 
 namespace Kyrne\Websocket\Provider;
@@ -24,9 +22,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
-use Psr\Log\LoggerInterface;
 use Pusher\Pusher;
-
 
 class AppProvider extends ServiceProvider
 {
@@ -47,15 +43,15 @@ class AppProvider extends ServiceProvider
         });
 
         $this->app->singleton(StatisticsStore::class, function ($app) {
-            return new DatabaseStore;
+            return new DatabaseStore();
         });
 
         $this->app->singleton(MemoryCollector::class, function ($app) {
-           return new MemoryCollector;
+            return new MemoryCollector();
         });
 
         $this->app->bind(Contract::class, function () {
-            return new class implements Contract {
+            return new class() implements Contract {
                 protected $apps = [];
 
                 public function __construct()
@@ -138,11 +134,11 @@ class AppProvider extends ServiceProvider
 
         if (!$config->has('websockets.ssl') && !$settings->get('kyrne-websocket.reverse_proxy')) {
             $config->set('websockets.ssl', [
-                'local_cert' => $settings->get('kyrne-websocket.local_cert'),
-                'local_pk' => $settings->get('kyrne-websocket.local_pk'),
-                'passphrase' => $settings->get('kyrne-websocket.cert_passphrase') ?? '',
-                'verify_peer' => false,
-                'allow_self_signed' => $settings->get('kyrne-websocket.cert_self_signed')
+                'local_cert'        => $settings->get('kyrne-websocket.local_cert'),
+                'local_pk'          => $settings->get('kyrne-websocket.local_pk'),
+                'passphrase'        => $settings->get('kyrne-websocket.cert_passphrase') ?? '',
+                'verify_peer'       => false,
+                'allow_self_signed' => $settings->get('kyrne-websocket.cert_self_signed'),
             ]);
         }
     }
@@ -190,7 +186,7 @@ class AppProvider extends ServiceProvider
             if ($settings->get('kyrne-websocket.cert_self_signed')) {
                 $options['curl_options'] = [
                     CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0
+                    CURLOPT_SSL_VERIFYPEER => 0,
                 ];
             }
 

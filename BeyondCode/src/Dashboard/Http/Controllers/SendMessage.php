@@ -14,24 +14,25 @@ class SendMessage
     /**
      * Send the message to the requested channel.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
     {
         $request->validate([
-            'appId' => ['required', new AppId],
-            'key' => 'required|string',
-            'secret' => 'required|string',
-            'event' => 'required|string',
+            'appId'   => ['required', new AppId()],
+            'key'     => 'required|string',
+            'secret'  => 'required|string',
+            'event'   => 'required|string',
             'channel' => 'required|string',
-            'data' => 'required|json',
+            'data'    => 'required|json',
         ]);
 
         $broadcaster = $this->getPusherBroadcaster([
-            'key' => $request->key,
+            'key'    => $request->key,
             'secret' => $request->secret,
-            'id' => $request->appId,
+            'id'     => $request->appId,
         ]);
 
         try {
@@ -44,7 +45,7 @@ class SendMessage
             );
         } catch (Exception $e) {
             return response()->json([
-                'ok' => false,
+                'ok'        => false,
                 'exception' => $e->getMessage(),
             ]);
         }

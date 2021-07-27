@@ -21,7 +21,8 @@ class QueryParameters
     /**
      * Initialize the class.
      *
-     * @param  \Psr\Http\Message\RequestInterface  $request
+     * @param \Psr\Http\Message\RequestInterface $request
+     *
      * @return void
      */
     public function __construct(RequestInterface $request)
@@ -46,7 +47,8 @@ class QueryParameters
     /**
      * Get a specific query parameter.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return string
      */
     public function get(string $name): string

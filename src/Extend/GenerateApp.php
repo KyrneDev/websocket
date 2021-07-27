@@ -1,13 +1,11 @@
 <?php
 /**
- *
- *  This file is part of kyrne/websocket
+ *  This file is part of kyrne/websocket.
  *
  *  Copyright (c) 2020 Charlie Kern.
  *
  *  For the full copyright and license information, please view the EULA.md
  *  file that was distributed with this source code.
- *
  */
 
 namespace Kyrne\Websocket\Extend;
@@ -20,7 +18,6 @@ use Illuminate\Support\Str;
 
 class GenerateApp implements LifecycleInterface
 {
-
     public function onEnable(Container $container, Extension $extension)
     {
         if ($extension->name === 'kyrne/websocket') {
@@ -59,7 +56,6 @@ class GenerateApp implements LifecycleInterface
     {
         // TODO: Implement onDisable() method.
     }
-
 
     public function extend(Container $container, Extension $extension = null)
     {

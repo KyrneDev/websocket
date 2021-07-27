@@ -8,7 +8,8 @@ use Ratchet\RFC6455\Messaging\MessageInterface;
 
 class WebSocketMessageReceived
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * The WebSockets app id that the user connected to.
@@ -41,9 +42,10 @@ class WebSocketMessageReceived
     /**
      * Create a new event instance.
      *
-     * @param  string  $appId
-     * @param  string  $socketId
-     * @param  MessageInterface  $message
+     * @param string           $appId
+     * @param string           $socketId
+     * @param MessageInterface $message
+     *
      * @return void
      */
     public function __construct(string $appId, string $socketId, MessageInterface $message)

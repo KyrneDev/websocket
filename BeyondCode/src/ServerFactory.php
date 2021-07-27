@@ -55,8 +55,9 @@ class ServerFactory
     /**
      * Initialize the class.
      *
-     * @param  string  $host
-     * @param  int  $port
+     * @param string $host
+     * @param int    $port
+     *
      * @return void
      */
     public function __construct(string $host, int $port)
@@ -70,7 +71,8 @@ class ServerFactory
     /**
      * Add the routes.
      *
-     * @param  \Symfony\Component\Routing\RouteCollection  $routes
+     * @param \Symfony\Component\Routing\RouteCollection $routes
+     *
      * @return $this
      */
     public function withRoutes(RouteCollection $routes)
@@ -83,7 +85,8 @@ class ServerFactory
     /**
      * Set the loop instance.
      *
-     * @param  \React\EventLoop\LoopInterface  $loop
+     * @param \React\EventLoop\LoopInterface $loop
+     *
      * @return $this
      */
     public function setLoop(LoopInterface $loop)
@@ -96,7 +99,8 @@ class ServerFactory
     /**
      * Set the console output.
      *
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $consoleOutput
+     * @param \Symfony\Component\Console\Output\OutputInterface $consoleOutput
+     *
      * @return $this
      */
     public function setConsoleOutput(OutputInterface $consoleOutput)
@@ -120,7 +124,7 @@ class ServerFactory
         }
 
         $app = new Router(
-            new UrlMatcher($this->routes, new RequestContext)
+            new UrlMatcher($this->routes, new RequestContext())
         );
 
         $httpServer = new HttpServer($app, config('websockets.max_request_size_in_kb') * 1024);

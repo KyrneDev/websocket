@@ -38,7 +38,8 @@ class MemoryCollector implements StatisticsCollector
     /**
      * Handle the incoming websocket message.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function webSocketMessage($appId)
@@ -50,7 +51,8 @@ class MemoryCollector implements StatisticsCollector
     /**
      * Handle the incoming API message.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function apiMessage($appId)
@@ -62,7 +64,8 @@ class MemoryCollector implements StatisticsCollector
     /**
      * Handle the new conection.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function connection($appId)
@@ -74,7 +77,8 @@ class MemoryCollector implements StatisticsCollector
     /**
      * Handle disconnections.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function disconnection($appId)
@@ -92,7 +96,7 @@ class MemoryCollector implements StatisticsCollector
     {
         $this->getStatistics()->then(function ($statistics) {
             foreach ($statistics as $appId => $statistic) {
-                if (! $statistic->isEnabled()) {
+                if (!$statistic->isEnabled()) {
                     continue;
                 }
 
@@ -138,7 +142,8 @@ class MemoryCollector implements StatisticsCollector
     /**
      * Get the saved statistics for an app.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return PromiseInterface[\BeyondCode\LaravelWebSockets\Statistics\Statistic|null]
      */
     public function getAppStatistics($appId): PromiseInterface
@@ -152,7 +157,8 @@ class MemoryCollector implements StatisticsCollector
      * Remove all app traces from the database if no connections have been set
      * in the meanwhile since last save.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return void
      */
     public function resetAppTraces($appId)
@@ -163,12 +169,13 @@ class MemoryCollector implements StatisticsCollector
     /**
      * Find or create a defined statistic for an app.
      *
-     * @param  string|int  $appId
+     * @param string|int $appId
+     *
      * @return \BeyondCode\LaravelWebSockets\Statistics\Statistic
      */
     protected function findOrMake($appId): Statistic
     {
-        if (! isset($this->statistics[$appId])) {
+        if (!isset($this->statistics[$appId])) {
             $this->statistics[$appId] = Statistic::new($appId);
         }
 
@@ -178,8 +185,9 @@ class MemoryCollector implements StatisticsCollector
     /**
      * Create a new record using the Statistic Store.
      *
-     * @param  \BeyondCode\LaravelWebSockets\Statistics\Statistic  $statistic
-     * @param  mixed  $appId
+     * @param \BeyondCode\LaravelWebSockets\Statistics\Statistic $statistic
+     * @param mixed                                              $appId
+     *
      * @return void
      */
     public function createRecord(Statistic $statistic, $appId)

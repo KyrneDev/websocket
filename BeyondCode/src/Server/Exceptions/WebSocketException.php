@@ -15,9 +15,9 @@ class WebSocketException extends Exception
     {
         return [
             'event' => 'pusher:error',
-            'data' => [
+            'data'  => [
                 'message' => $this->getMessage(),
-                'code' => $this->getCode(),
+                'code'    => $this->getCode(),
             ],
         ];
     }
@@ -25,8 +25,9 @@ class WebSocketException extends Exception
     /**
      * Trigger the exception message.
      *
-     * @param  string  $message
-     * @param  int  $code
+     * @param string $message
+     * @param int    $code
+     *
      * @return void
      */
     public function trigger(string $message, int $code = 4001)

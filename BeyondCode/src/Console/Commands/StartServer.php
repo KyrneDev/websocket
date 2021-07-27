@@ -124,7 +124,7 @@ class StartServer extends Command
      */
     protected function configureStatistics()
     {
-        if (! $this->option('disable-statistics')) {
+        if (!$this->option('disable-statistics')) {
             $intervalInSeconds = $this->option('statistics-interval') ?: config('websockets.statistics.interval_in_seconds', 3600);
 
             $this->loop->addPeriodicTimer($intervalInSeconds, function () {
@@ -173,7 +173,7 @@ class StartServer extends Command
         // to receive new connections, close the current connections,
         // then stopping the loop.
 
-        if (! extension_loaded('pcntl')) {
+        if (!extension_loaded('pcntl')) {
             return;
         }
 
@@ -269,7 +269,8 @@ class StartServer extends Command
     protected function buildServer()
     {
         $this->server = new ServerFactory(
-            $this->option('host'), $this->option('port')
+            $this->option('host'),
+            $this->option('port')
         );
 
         if ($loop = $this->option('loop')) {
@@ -291,7 +292,8 @@ class StartServer extends Command
     protected function getLastRestart()
     {
         return Cache::get(
-            'beyondcode:websockets:restart', 0
+            'beyondcode:websockets:restart',
+            0
         );
     }
 

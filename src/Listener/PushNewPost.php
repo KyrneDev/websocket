@@ -1,13 +1,11 @@
 <?php
 /**
- *
- *  This file is part of kyrne/websocket
+ *  This file is part of kyrne/websocket.
  *
  *  Copyright (c) 2020 Charlie Kern.
  *
  *  For the full copyright and license information, please view the EULA.md
  *  file that was distributed with this source code.
- *
  */
 
 namespace Kyrne\Websocket\Listener;
@@ -34,15 +32,15 @@ class PushNewPost
     {
         $channels = [];
 
-        if ($event->post->isVisibleTo(new Guest)) {
+        if ($event->post->isVisibleTo(new Guest())) {
             $channels[] = 'public';
         } else {
             // Retrieve private channels, used for each user.
             $response = $this->pusher->get_channels([
-                'filter_by_prefix' => 'private-user'
+                'filter_by_prefix' => 'private-user',
             ]);
 
-            if (! $response) {
+            if (!$response) {
                 return;
             }
 
@@ -50,7 +48,6 @@ class PushNewPost
                 $userId = Str::after($name, 'private-user');
 
                 if (($user = User::find($userId)) && $event->post->isVisibleTo($user)) {
-
                     $channels[] = $name;
                 }
             }
@@ -63,7 +60,7 @@ class PushNewPost
                 $this->pusher->trigger($channelChunk, 'newPost', [
                     'postId'       => $event->post->id,
                     'discussionId' => $event->post->discussion->id,
-                    'tagIds'       => $tags ? $tags->pluck('id') : null
+                    'tagIds'       => $tags ? $tags->pluck('id') : null,
                 ]);
             }
         }

@@ -28,14 +28,14 @@ class PresenceChannel extends PrivateChannel
                         }
 
                         $connection->send(json_encode([
-                            'event' => 'pusher_internal:subscription_succeeded',
+                            'event'   => 'pusher_internal:subscription_succeeded',
                             'channel' => $this->getName(),
-                            'data' => json_encode([
+                            'data'    => json_encode([
                                 'presence' => [
                                     'ids' => collect($users)->map(function ($user) {
                                         return (string) $user->user_id;
                                     })->values(),
-                                    'hash' => $hash,
+                                    'hash'  => $hash,
                                     'count' => count($users),
                                 ],
                             ]),
@@ -49,16 +49,17 @@ class PresenceChannel extends PrivateChannel
                 // and in this case the events will only be triggered when the first tab is opened.
                 $this->channelManager
                     ->getMemberSockets($user->user_id, $connection->app->id, $this->getName())
-                    ->then(function ($sockets) use ($payload, $connection, $user) {
+                    ->then(function ($sockets) use ($payload, $connection) {
                         if (count($sockets) === 1) {
                             $memberAddedPayload = [
-                                'event' => 'pusher_internal:member_added',
+                                'event'   => 'pusher_internal:member_added',
                                 'channel' => $this->getName(),
-                                'data' => $payload->channel_data,
+                                'data'    => $payload->channel_data,
                             ];
 
                             $this->broadcastToEveryoneExcept(
-                                (object) $memberAddedPayload, $connection->socketId,
+                                (object) $memberAddedPayload,
+                                $connection->socketId,
                                 $connection->app->id
                             );
                         }
@@ -78,7 +79,7 @@ class PresenceChannel extends PrivateChannel
                 return @json_decode($user);
             })
             ->then(function ($user) use ($connection) {
-                if (! $user) {
+                if (!$user) {
                     return;
                 }
 
@@ -94,15 +95,16 @@ class PresenceChannel extends PrivateChannel
                             ->then(function ($sockets) use ($connection, $user) {
                                 if (count($sockets) === 0) {
                                     $memberRemovedPayload = [
-                                        'event' => 'pusher_internal:member_removed',
+                                        'event'   => 'pusher_internal:member_removed',
                                         'channel' => $this->getName(),
-                                        'data' => json_encode([
+                                        'data'    => json_encode([
                                             'user_id' => $user->user_id,
                                         ]),
                                     ];
 
                                     $this->broadcastToEveryoneExcept(
-                                        (object) $memberRemovedPayload, $connection->socketId,
+                                        (object) $memberRemovedPayload,
+                                        $connection->socketId,
                                         $connection->app->id
                                     );
                                 }
