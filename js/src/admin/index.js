@@ -13,7 +13,7 @@ app.initializers.add('kyrne-websocket', app => {
     .registerPage(WebsocketPage);
 
   extend(DashboardPage.prototype, 'availableWidgets', widgets => {
-    widgets.add('statistics', <WebsocketStatsWidget/>, 20);
+    widgets.add('websocketstatistics', <WebsocketStatsWidget/>, 15);
   });
 });
 

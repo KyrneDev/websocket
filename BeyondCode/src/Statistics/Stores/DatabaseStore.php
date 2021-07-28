@@ -85,6 +85,7 @@ class DatabaseStore implements StatisticsStore
             ->when(!is_null($processCollection), function ($collection) use ($processCollection) {
                 return call_user_func($processCollection, $collection);
             })
+            ->reverse()
             ->map(function (WebSocketsStatisticsEntry $statistic) {
                 return $this->statisticToArray($statistic);
             })
