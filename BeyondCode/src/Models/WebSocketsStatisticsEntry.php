@@ -22,9 +22,9 @@ class WebSocketsStatisticsEntry extends AbstractModel
         $stat = new static();
 
         $stat->app_id = $data['app_id'];
-        $stat->peak_connection_count = $data['peak_connection_count'];
-        $stat->websocket_message_count = $data['websocket_message_count'];
-        $stat->api_message_count = $data['api_message_count'];
+        $stat->peak_connection_count = $data['peak_connections_count'];
+        $stat->websocket_message_count = $data['websocket_messages_count'];
+        $stat->api_message_count = $data['api_messages_count'];
         $stat->created_at = Carbon::now();
         $stat->updated_at = Carbon::now();
 
