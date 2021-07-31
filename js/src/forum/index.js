@@ -5,6 +5,7 @@ import DiscussionList from 'flarum/components/DiscussionList';
 import DiscussionPage from 'flarum/components/DiscussionPage';
 import IndexPage from 'flarum/components/IndexPage';
 import Button from 'flarum/components/Button';
+import Stream from 'flarum/utils/Stream';
 import PresenceChannel from './PresenceChannel';
 
 app.initializers.add('kyrne-websocket', () => {
@@ -73,12 +74,11 @@ app.initializers.add('kyrne-websocket', () => {
               app
                 .request({
                     method: 'GET',
-                    url: app.forum.attribute('apiUrl') + '/discussions/' + id + '?include=user',
+                    url: app.forum.attribute('apiUrl') + '/discussions/' + id,
                   })
                 .then(payload => {
                   if (app.forum.attribute('websocketAutoUpdate')) {
                     const discussion = app.store.pushPayload(payload);
-                    this.attrs.state.removeDiscussion(discussion);
                     this.attrs.state.addDiscussion(discussion);
 
                     if (!document.hasFocus()) {
@@ -120,8 +120,13 @@ app.initializers.add('kyrne-websocket', () => {
       let foundUser = false;
 
       app.pushedUpdates.map(payload => {
-        if (app.current.data.user && payload.included[0].id == app.current.data.user.id()) {
-          foundUser = true;
+        for (let i = 0; i < payload.included.length; i++) {
+          if (payload.included[i].type === 'users') {
+            if (app.current.data.user && payload.included[i].id == app.current.data.user.id()) {
+              foundUser = true;
+            }
+            break;
+          }
         }
       })
 
@@ -133,7 +138,15 @@ app.initializers.add('kyrne-websocket', () => {
               this.loadingUpdated = true;
               await app.pushedUpdates.map((payload) => {
                 const discussion = app.store.pushPayload(payload);
-                this.attrs.state.removeDiscussion(discussion);
+                for (let i = 0; i < discussion.payload.included.length; i++) {
+                  let model = discussion.payload.included[i];
+                  if (model.type === 'users') {
+                    model = new app.store.models['users'](model);
+                    discussion.user = Stream(model);
+                    app.store.data['discussions'][discussion.id()].user = Stream(model);
+                    break;
+                  }
+                }
                 this.attrs.state.addDiscussion(discussion);
               })
               app.pushedUpdates = [];
