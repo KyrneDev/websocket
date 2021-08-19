@@ -11,6 +11,12 @@ kyrne-websocket:
         discussion_page:
             viewing_title: "Here now:"
 
+    # These translations are used for the online users widget.
+        widget:
+          title: Online Users
+          empty: No Users Currently Online.
+
+
     ##
     # UNIQUE KEYS - The following keys are used in only one location each.
     ##

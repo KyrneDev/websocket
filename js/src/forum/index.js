@@ -6,7 +6,9 @@ import DiscussionPage from 'flarum/components/DiscussionPage';
 import IndexPage from 'flarum/components/IndexPage';
 import Button from 'flarum/components/Button';
 import Stream from 'flarum/utils/Stream';
+
 import PresenceChannel from './PresenceChannel';
+import RegisterWidget from '../common/Widget/RegisterWidget';
 
 app.initializers.add('kyrne-websocket', () => {
 
@@ -42,7 +44,8 @@ app.initializers.add('kyrne-websocket', () => {
         return resolve({
           channels: {
             main: socket.subscribe('public'),
-            user: app.session.user ? socket.subscribe('private-user' + app.session.user.id()) : null
+            user: app.session.user ? socket.subscribe('private-user' + app.session.user.id()) : null,
+            presence: socket.subscribe('presence-forum')
           },
           pusher: socket,
         });
@@ -238,4 +241,8 @@ app.initializers.add('kyrne-websocket', () => {
   });
 
   PresenceChannel();
+
+  if (app.initializers.has('afrux/forum-widgets-core')) {
+    RegisterWidget(app);
+  }
 });

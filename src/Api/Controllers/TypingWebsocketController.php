@@ -5,6 +5,7 @@ namespace Kyrne\Websocket\Api\Controllers;
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Api\Serializer\BasicUserSerializer;
 use Flarum\Http\RequestUtil;
+use Flarum\User\Exception\PermissionDeniedException;
 use Psr\Http\Message\ServerRequestInterface;
 use Pusher\Pusher;
 use Tobscure\JsonApi\Document;
@@ -28,12 +29,17 @@ class TypingWebsocketController extends AbstractShowController
         $data = $request->getParsedBody();
         $actor = RequestUtil::getActor($request);
 
-        $this->pusher->trigger('presence-'.$data['discussionId'], 'typing', [
-            'userId'    => $actor->id,
-            'avatarUrl' => $actor->avatar_url,
-            'username'  => $actor->username,
-        ]);
+        if ($actor->isGuest()) {
+            throw new PermissionDeniedException;
+        } else {
+            $this->pusher->trigger('presence-' . $data['discussionId'], 'typing', [
+                'userId' => $actor->id,
+                'avatarUrl' => $actor->avatar_url,
+                'username' => $actor->username,
+            ]);
 
-        return true;
+            return true;
+        }
+
     }
 }

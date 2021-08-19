@@ -104,3 +104,35 @@
 .DiscussionPage-nav > ul.websocket-nav {
   margin-top: -120px;
 }
+
+
+/*!
+ * Online Users Widget v0.1.1 by @SychO9
+ * License - MIT https://github.com/afrux/online-users-widget/blob/main/LICENSE.md
+ */
+.WebsocketOnlineUsersWidget-users {
+  &-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &-item {
+    margin: 2px;
+
+    .Avatar {
+      --size: 35px;
+      width: var(--size);
+      height: var(--size);
+      font-size: calc(~"var(--size) / 2");
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &--plus .Avatar {
+      background-color: @body-bg;
+      color: @control-color;
+      font-size: 13px;
+    }
+  }
+}

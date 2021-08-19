@@ -46,11 +46,11 @@ return [
 
     (new Frontend('forum'))
         ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/less/forum.less'),
+        ->css(__DIR__ . '/resources/less/forum.less'),
 
     (new Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/less/admin.less')
+        ->css(__DIR__ . '/resources/less/admin.less')
         ->content(AddStatsData::class),
 
     new Locales(__DIR__.'/resources/locale'),

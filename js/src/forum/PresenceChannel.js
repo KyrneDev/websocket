@@ -10,16 +10,16 @@ import stringToColor from 'flarum/utils/stringToColor';
 export default function () {
   extend(DiscussionPage.prototype, 'view', function (vnode) {
     app.pusher.then(object => {
-      if (!app.discussions.presence && app.session.user && this.discussion) {
+      if (!app.discussions.presence && this.discussion) {
         app.discussions.presence = object.pusher.subscribe('presence-' + this.discussion.id());
 
         app.discussions.presence.bind("pusher:subscription_succeeded", (members) => {
           this.membersOnline = [];
           Object.keys(members.members).map(member => {
-            if (app.session.user.id() != member) {
+            if (app.discussions.presence.members.myID != member && typeof member !== 'string') {
               this.membersOnline.push({
                 id: Stream(member),
-                color: Stream(stringToColor(members.members[member].username)),
+                color: Stream('#' + stringToColor(members.members[member].username)),
                 displayName: Stream(members.members[member].username),
                 avatarUrl: Stream(members.members[member].avatarUrl)
               });
@@ -39,10 +39,10 @@ export default function () {
         });
 
         app.discussions.presence.bind("pusher:member_added", (member) => {
-          if (app.session.user.id() != member.id) {
+          if (app.discussions.presence.members.myID != member.id && typeof member.id !== 'string') {
             this.membersOnline.push({
               id: Stream(member.id),
-              color: Stream(stringToColor(member.info.username)),
+              color: Stream('#' + stringToColor(member.info.username)),
               displayName: Stream(member.info.username),
               avatarUrl: Stream(member.info.avatarUrl)
             });
@@ -108,18 +108,20 @@ export default function () {
   });
 
   extend(ReplyComposer.prototype, 'view', function () {
-    $('.TextEditor-editor').on('keydown', () => {
-      if (this.typingTimeout) {
-        this.typingTimeout = false;
-        app.request({
-          method: 'POST',
-          url: app.forum.attribute('apiUrl') + '/posts/typing',
-          body: {
-            discussionId: this.attrs.discussion.id()
-          }
-        })
-      }
-    })
+    if (app.session.user) {
+      $('.TextEditor-editor').on('keydown', () => {
+        if (this.typingTimeout) {
+          this.typingTimeout = false;
+          app.request({
+            method: 'POST',
+            url: app.forum.attribute('apiUrl') + '/posts/typing',
+            body: {
+              discussionId: this.attrs.discussion.id()
+            }
+          })
+        }
+      })
+    }
   });
 
   extend(ReplyPlaceholder.prototype, 'oninit', function () {
@@ -128,10 +130,10 @@ export default function () {
     setTimeout(() => {
       if (app.discussions.presence) {
         app.discussions.presence.bind('typing', (data) => {
-          if (!this.typers[data.userId] && data.userId != app.session.user.id()) {
+          if (!this.typers[data.userId] && data.userId != app.discussions.presence.members.myID) {
             this.typers[data.userId] = {
               id: Stream(data.userId),
-              color: Stream(stringToColor(data.username)),
+              color: Stream('#' + stringToColor(data.username)),
               displayName: Stream(data.username),
               avatarUrl: Stream(data.avatarUrl),
               time: new Date()
