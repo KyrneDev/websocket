@@ -158,7 +158,7 @@ app.initializers.add('kyrne-websocket', () => {
               this.loadingUpdated = false;
             },
             loading: this.loadingUpdated,
-          }, app.translator.trans('kyrne-websocket.admin.discussion_list.show_updates_text', {count}))
+          }, app.translator.trans('kyrne-websocket.forum.discussion_list.show_updates_text', {count}))
         );
       }
 
