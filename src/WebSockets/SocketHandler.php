@@ -78,8 +78,7 @@ class SocketHandler extends WebSocketHandler
         MessageInterface $message,
         ConnectionInterface $connection,
         ChannelManager $channelManager
-    ): PusherMessage
-    {
+    ): PusherMessage {
         $payload = json_decode($message->getPayload());
 
         return Str::startsWith($payload->event, 'pusher:')
