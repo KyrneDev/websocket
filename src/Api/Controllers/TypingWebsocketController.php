@@ -30,16 +30,15 @@ class TypingWebsocketController extends AbstractShowController
         $actor = RequestUtil::getActor($request);
 
         if ($actor->isGuest()) {
-            throw new PermissionDeniedException;
+            throw new PermissionDeniedException();
         } else {
-            $this->pusher->trigger('presence-' . $data['discussionId'], 'typing', [
-                'userId' => $actor->id,
-                'avatarUrl' => $actor->avatar_url,
+            $this->pusher->trigger('presence-'.$data['discussionId'], 'typing', [
+                'userId'      => $actor->id,
+                'avatarUrl'   => $actor->avatar_url,
                 'displayName' => $actor->getDisplayNameAttribute(),
             ]);
 
             return true;
         }
-
     }
 }

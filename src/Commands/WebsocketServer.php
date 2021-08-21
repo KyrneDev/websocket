@@ -118,7 +118,7 @@ class WebsocketServer extends StartServer
         if (!$this->option('disable-statistics')) {
             $intervalInSeconds = $this->option('statistics-interval');
 
-            $this->info('Statistics will be saved every '. $intervalInSeconds . ' seconds');
+            $this->info('Statistics will be saved every '.$intervalInSeconds.' seconds');
 
             $this->loop->addPeriodicTimer($intervalInSeconds, function () {
                 $this->line('Saving statistics...');

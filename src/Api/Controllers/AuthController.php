@@ -43,7 +43,7 @@ class AuthController implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $actor = RequestUtil::getActor($request);
-        $userChannel = 'private-user' . $actor->id;
+        $userChannel = 'private-user'.$actor->id;
         $body = $request->getParsedBody();
         $channelName = Arr::get($body, 'channel_name');
         $socketId = Arr::get($body, 'socket_id');
@@ -76,14 +76,12 @@ class AuthController implements RequestHandlerInterface
             } else {
                 $payload = json_decode($pusher->presence_auth($channelName, $socketId, $actor->id, [
                     'displayName' => $actor->getDisplayNameAttribute(),
-                    'avatarUrl' => $actor->avatar_url,
-                    'slug' => $this->slugManager->forResource(User::class)->toSlug($actor),
+                    'avatarUrl'   => $actor->avatar_url,
+                    'slug'        => $this->slugManager->forResource(User::class)->toSlug($actor),
                 ]), true);
             }
 
             return new JsonResponse($payload);
-
-
         } elseif (strpos($channelName, 'private-loginId') !== false) {
             $pusher = new Pusher(
                 $this->settings->get('kyrne-websocket.app_key'),
