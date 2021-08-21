@@ -76,25 +76,11 @@ server {
 
 ### Step 3:
 
-Add the following to the very top of the file: 
-
-```nginx
-map $http_upgrade $type {
-  default "web";
-  websocket "ws";
-}
-```
-### Step 4:
-
 Add the following inside of your SSL server block: 
 ```nginx
   # Your default configuration comes here...
 
-	location / {
-		try_files /nonexistent @$type;
-	}
-
-	location @ws {
+	location /app {
 	    proxy_pass             http://127.0.0.1:2083;
 	    proxy_read_timeout     60;
 	    proxy_connect_timeout  60;
@@ -110,37 +96,13 @@ Add the following inside of your SSL server block:
 ```
 You can now save and close this file. These configurations will tell Nginx about your websocket server, and how to send requests to it.
 
-### Step 5:
-
-Open up the default provided `.nginx.conf` that came with your Flarum installation, it is usually just outside of your `public` directory. (Usually something like `/var/www/flarum` or `/var/www/html`) The top few lines should look like: 
-```
-# Pass requests that don't refer directly to files in the filesystem to index.php
-location / {
-  try_files $uri $uri/ /index.php?$query_string;
-}
-
-# The following directives are based on best practices from H5BP Nginx Server Configs
-# https://github.com/h5bp/server-configs-nginx
-```
-
-### Step 6: 
-
-Edit the top lines to look like this:
-```
-# Pass requests that don't refer directly to files in the filesystem to index.php
-location @web {
-  try_files $uri $uri/ /index.php?$query_string;
-}
-```
-Replacing the `/` after `location` with `@web`.
-
 **We are now done with the Nginx configuration! The hard part is over!**
 
-### Step 7:
+### Step 4:
 
 Once you have completed all the above steps, you can now enable the extension. Once enabled, the settings will pop up, make sure to turn on the switch that says "Reverse Proxy Support" leave everything else as is. Then save your settings.
 
-### Step 8: 
+### Step 5: 
 You are now ready to turn on the websocket server! Skip down to that section.
 
 ## Option 2 - Websocket server handles SSL

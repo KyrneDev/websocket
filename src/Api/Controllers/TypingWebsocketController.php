@@ -35,7 +35,7 @@ class TypingWebsocketController extends AbstractShowController
             $this->pusher->trigger('presence-' . $data['discussionId'], 'typing', [
                 'userId' => $actor->id,
                 'avatarUrl' => $actor->avatar_url,
-                'username' => $actor->username,
+                'displayName' => $actor->getDisplayNameAttribute(),
             ]);
 
             return true;

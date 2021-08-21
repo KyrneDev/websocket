@@ -71,11 +71,11 @@ class AuthController implements RequestHandlerInterface
                 $this->settings->get('kyrne-websocket.app_port')
             );
 
-            if ($actor->isGuest()) {
+            if ($actor->isGuest() || !$actor->getPreference('discloseOnline')) {
                 $payload = json_decode($pusher->presence_auth($channelName, $socketId, 'Guest'.mt_rand(), []), true);
             } else {
                 $payload = json_decode($pusher->presence_auth($channelName, $socketId, $actor->id, [
-                    'username' => $actor->username,
+                    'displayName' => $actor->getDisplayNameAttribute(),
                     'avatarUrl' => $actor->avatar_url,
                     'slug' => $this->slugManager->forResource(User::class)->toSlug($actor),
                 ]), true);

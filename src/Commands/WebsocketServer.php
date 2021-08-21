@@ -130,6 +130,21 @@ class WebsocketServer extends StartServer
     }
 
     /**
+     * Configure the tracker that will delete
+     * from the store the connections that.
+     *
+     * @return void
+     */
+    protected function configurePongTracker()
+    {
+        $this->loop->addPeriodicTimer(15, function () {
+            $this->laravel
+                ->make(ChannelManager::class)
+                ->removeObsoleteConnections();
+        });
+    }
+
+    /**
      * Build the server instance.
      *
      * @return void

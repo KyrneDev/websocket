@@ -19,8 +19,8 @@ export default function () {
             if (app.discussions.presence.members.myID != member && typeof member !== 'string') {
               this.membersOnline.push({
                 id: Stream(member),
-                color: Stream('#' + stringToColor(members.members[member].username)),
-                displayName: Stream(members.members[member].username),
+                color: Stream('#' + stringToColor(members.members[member].displayName)),
+                displayName: Stream(members.members[member].displayName),
                 avatarUrl: Stream(members.members[member].avatarUrl)
               });
               m.redraw();
@@ -42,8 +42,8 @@ export default function () {
           if (app.discussions.presence.members.myID != member.id && typeof member.id !== 'string') {
             this.membersOnline.push({
               id: Stream(member.id),
-              color: Stream('#' + stringToColor(member.info.username)),
-              displayName: Stream(member.info.username),
+              color: Stream('#' + stringToColor(member.info.displayName)),
+              displayName: Stream(member.info.displayName),
               avatarUrl: Stream(member.info.avatarUrl)
             });
             m.redraw();
@@ -108,7 +108,7 @@ export default function () {
   });
 
   extend(ReplyComposer.prototype, 'view', function () {
-    if (app.session.user) {
+    if (app.session.user && app.session.user.preferences().discloseOnline) {
       $('.TextEditor-editor').on('keydown', () => {
         if (this.typingTimeout) {
           this.typingTimeout = false;
@@ -133,8 +133,8 @@ export default function () {
           if (!this.typers[data.userId] && data.userId != app.discussions.presence.members.myID) {
             this.typers[data.userId] = {
               id: Stream(data.userId),
-              color: Stream('#' + stringToColor(data.username)),
-              displayName: Stream(data.username),
+              color: Stream('#' + stringToColor(data.displayName)),
+              displayName: Stream(data.displayName),
               avatarUrl: Stream(data.avatarUrl),
               time: new Date()
             };
