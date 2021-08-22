@@ -49,27 +49,13 @@ class AuthController implements RequestHandlerInterface
         $socketId = Arr::get($body, 'socket_id');
 
         if ($channelName === $userChannel) {
-            $pusher = new Pusher(
-                $this->settings->get('kyrne-websocket.app_key'),
-                $this->settings->get('kyrne-websocket.app_secret'),
-                $this->settings->get('kyrne-websocket.app_id'),
-                [],
-                $this->settings->get('kyrne-websocket.app_host'),
-                $this->settings->get('kyrne-websocket.app_port')
-            );
+            $pusher = $this->getPusher();
 
             $payload = json_decode($pusher->socket_auth($userChannel, $socketId), true);
 
             return new JsonResponse($payload);
         } elseif (strpos($channelName, 'presence') !== false) {
-            $pusher = new Pusher(
-                $this->settings->get('kyrne-websocket.app_key'),
-                $this->settings->get('kyrne-websocket.app_secret'),
-                $this->settings->get('kyrne-websocket.app_id'),
-                [],
-                $this->settings->get('kyrne-websocket.app_host'),
-                $this->settings->get('kyrne-websocket.app_port')
-            );
+            $pusher = $this->getPusher();
 
             if ($actor->isGuest() || !$actor->getPreference('discloseOnline')) {
                 $payload = json_decode($pusher->presence_auth($channelName, $socketId, 'Guest'.mt_rand(), []), true);
@@ -83,14 +69,7 @@ class AuthController implements RequestHandlerInterface
 
             return new JsonResponse($payload);
         } elseif (strpos($channelName, 'private-loginId') !== false) {
-            $pusher = new Pusher(
-                $this->settings->get('kyrne-websocket.app_key'),
-                $this->settings->get('kyrne-websocket.app_secret'),
-                $this->settings->get('kyrne-websocket.app_id'),
-                [],
-                $this->settings->get('kyrne-websocket.app_host'),
-                $this->settings->get('kyrne-websocket.app_port')
-            );
+            $pusher = $this->getPusher();
 
             $payload = json_decode($pusher->socket_auth(Arr::get($body, 'channel_name'), $socketId), true);
 
@@ -98,5 +77,18 @@ class AuthController implements RequestHandlerInterface
         }
 
         return new EmptyResponse(403);
+    }
+
+    protected function getPusher()
+    {
+        return new Pusher(
+            $this->settings->get('kyrne-websocket.app_key'),
+            $this->settings->get('kyrne-websocket.app_secret'),
+            $this->settings->get('kyrne-websocket.app_id'),
+            [
+                "host" => $this->settings->get('kyrne-websocket.app_host'),
+                "port" => $this->settings->get('kyrne-websocket.app_port')
+            ]
+        );
     }
 }

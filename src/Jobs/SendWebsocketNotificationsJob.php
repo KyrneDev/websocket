@@ -1,6 +1,6 @@
 <?php
 
-namespace Kyrne\Websocket;
+namespace Kyrne\Websocket\Jobs;
 
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Queue\AbstractJob;
@@ -30,7 +30,7 @@ class SendWebsocketNotificationsJob extends AbstractJob
         $pusher = app(Pusher::class);
         foreach ($this->recipients as $user) {
             if ($user->shouldAlert($this->blueprint::getType())) {
-                $pusher->trigger('private-user'.$user->id, 'notification', null);
+                $pusher->triggerAsync('private-user'.$user->id, 'notification', null);
             }
         }
     }

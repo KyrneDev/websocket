@@ -11,58 +11,23 @@
 namespace Kyrne\Websocket\Listener;
 
 use Flarum\Post\Event\Posted;
-use Flarum\User\Guest;
-use Flarum\User\User;
-use Illuminate\Support\Str;
-use Pusher\Pusher;
+use Illuminate\Contracts\Queue\Queue;
+use Kyrne\Websocket\Jobs\SendWebsocketPostJob;
 
 class PushNewPost
 {
     /**
-     * @var Pusher
+     * @var Queue
      */
-    protected $pusher;
+    protected $queue;
 
-    public function __construct(Pusher $pusher)
+    public function __construct(Queue $queue)
     {
-        $this->pusher = $pusher;
+        $this->queue = $queue;
     }
 
     public function handle(Posted $event)
     {
-        $channels = [];
-
-        if ($event->post->isVisibleTo(new Guest())) {
-            $channels[] = 'public';
-        } else {
-            // Retrieve private channels, used for each user.
-            $response = $this->pusher->get_channels([
-                'filter_by_prefix' => 'private-user',
-            ]);
-
-            if (!$response) {
-                return;
-            }
-
-            foreach ($response->channels as $name => $channel) {
-                $userId = Str::after($name, 'private-user');
-
-                if (($user = User::find($userId)) && $event->post->isVisibleTo($user)) {
-                    $channels[] = $name;
-                }
-            }
-        }
-
-        if (count($channels)) {
-            foreach (array_chunk($channels, 99) as $channelChunk) {
-                $tags = $event->post->discussion->tags;
-
-                $this->pusher->trigger($channelChunk, 'newPost', [
-                    'postId'       => $event->post->id,
-                    'discussionId' => $event->post->discussion->id,
-                    'tagIds'       => $tags ? $tags->pluck('id') : null,
-                ]);
-            }
-        }
+        $this->queue->push(new SendWebsocketPostJob($event->post));
     }
 }

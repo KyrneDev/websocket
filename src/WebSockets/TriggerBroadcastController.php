@@ -15,20 +15,42 @@ use Illuminate\Http\Request;
 
 class TriggerBroadcastController extends TriggerEvent
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Response|object
+     */
     public function __invoke(Request $request)
     {
-        $this->ensureValidSignature($request);
+        $channels = $request->channels ?: [];
 
-        foreach ($request->json()->get('channels', []) as $channelName) {
-            $channel = $this->channelManager->find($request->appId, $channelName);
-
-            optional($channel)->broadcastToEveryoneExcept((object) [
-                'channel' => $channelName,
-                'event'   => $request->json()->get('name'),
-                'data'    => $request->json()->get('data'),
-            ], $request->json()->get('socket_id'), app('flarum.settings')->get('kyrne-websocket.app_id'));
+        if (is_string($channels)) {
+            $channels = [$channels];
         }
 
-        return $request->json()->all();
+        foreach ($channels as $channelName) {
+            // Here you can use the ->find(), even if the channel
+            // does not exist on the server. If it does not exist,
+            // then the message simply will get broadcasted
+            // across the other servers.
+            $channel = $this->channelManager->find(
+                $request->appId, $channelName
+            );
+
+            $payload = [
+                'event' => $request->name,
+                'channel' => $channelName,
+                'data' => $request->data,
+            ];
+
+            if ($channel) {
+                $channel->broadcastLocallyToEveryoneExcept(
+                    (object) $payload,
+                    $request->socket_id,
+                    $request->appId
+                );
+            }
+        }
+
+        return (object) [];
     }
 }

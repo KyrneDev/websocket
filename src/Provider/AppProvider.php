@@ -194,9 +194,7 @@ class AppProvider extends ServiceProvider
                 $settings->get('kyrne-websocket.app_key'),
                 $settings->get('kyrne-websocket.app_secret'),
                 $settings->get('kyrne-websocket.app_id'),
-                $options,
-                $host,
-                $port
+                $options
             );
 
             if (app(Config::class)->inDebugMode()) {

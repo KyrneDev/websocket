@@ -5,6 +5,7 @@ namespace Kyrne\Websocket;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use Flarum\Notification\Driver\NotificationDriverInterface;
 use Illuminate\Contracts\Queue\Queue;
+use Kyrne\Websocket\Jobs\SendWebsocketNotificationsJob;
 
 class WebsocketNotificationDriver implements NotificationDriverInterface
 {
