@@ -6,9 +6,9 @@ use Flarum\Post\Post;
 use Flarum\Queue\AbstractJob;
 use Flarum\User\Guest;
 use Flarum\User\User;
+use GuzzleHttp\Promise;
 use Illuminate\Support\Str;
 use Pusher\Pusher;
-use GuzzleHttp\Promise;
 
 class SendWebsocketPostJob extends AbstractJob
 {

@@ -17,6 +17,7 @@ class TriggerBroadcastController extends TriggerEvent
 {
     /**
      * @param Request $request
+     *
      * @return \Illuminate\Http\Response|object
      */
     public function __invoke(Request $request)
@@ -33,13 +34,14 @@ class TriggerBroadcastController extends TriggerEvent
             // then the message simply will get broadcasted
             // across the other servers.
             $channel = $this->channelManager->find(
-                $request->appId, $channelName
+                $request->appId,
+                $channelName
             );
 
             $payload = [
-                'event' => $request->name,
+                'event'   => $request->name,
                 'channel' => $channelName,
-                'data' => $request->data,
+                'data'    => $request->data,
             ];
 
             if ($channel) {
