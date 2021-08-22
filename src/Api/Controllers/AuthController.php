@@ -86,8 +86,8 @@ class AuthController implements RequestHandlerInterface
             $this->settings->get('kyrne-websocket.app_secret'),
             $this->settings->get('kyrne-websocket.app_id'),
             [
-                "host" => $this->settings->get('kyrne-websocket.app_host'),
-                "port" => $this->settings->get('kyrne-websocket.app_port')
+                'host' => $this->settings->get('kyrne-websocket.app_host'),
+                'port' => $this->settings->get('kyrne-websocket.app_port'),
             ]
         );
     }
