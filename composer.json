@@ -1,6 +1,6 @@
 {
     "name": "kyrne/websocket",
-    "description": "Integrated Pusher replacement.",
+    "description": "Integrated Pusher replacement. Fix for LaForeria.com",
     "keywords": [
         "extension",
         "flarum", "kyrne",
