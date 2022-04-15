@@ -30,7 +30,7 @@ class SendWebsocketNotificationsJob extends AbstractJob
         $pusher = app(Pusher::class);
         foreach ($this->recipients as $user) {
             if ($user->shouldAlert($this->blueprint::getType())) {
-                $pusher->triggerAsync('private-user'.$user->id, 'notification', null);
+                $pusher->trigger('private-user'.$user->id, 'notification', null);
             }
         }
     }
