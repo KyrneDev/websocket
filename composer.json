@@ -7,6 +7,7 @@
         "websocket", "pusher", "realtime"
     ],
     "type": "flarum-extension",
+    "version": "1.0.0",
     "license": "MIT",
     "authors": [
         {
