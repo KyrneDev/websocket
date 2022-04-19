@@ -43,7 +43,6 @@ class SendWebsocketPostJob extends AbstractJob
 
             foreach ($response->channels as $name => $channel) {
                 $userId = Str::after($name, 'private-user');
-
                 if (($user = User::find($userId)) && $post->isVisibleTo($user)) {
                     $channels[] = $name;
                 }
