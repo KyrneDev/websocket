@@ -63,34 +63,50 @@ app.initializers.add('kyrne-websocket', () => {
           const id = String(data.discussionId);
           const params = app.discussions.getParams();
           if (['user.posts', 'user.discussions'].indexOf(app.current.data.routeName) !== -1) {
-            return 
+            return
           };
-          if (!params.q && !params.sort && !params.filter) {
-            if (params.tags) {
-              const tag = app.store.getBy('tags', 'slug', params.tags);
-              if (data.tagIds.indexOf(Number(tag.id())) === -1) {
-                return
-              };
-            }
+          if (!params.q) {
             if ((!app.current.get('discussion') || id !== app.current.get('discussion').id()) && app.pushedUpdates.indexOf(id) === -1) {
               app.request({
-                  method: 'GET',
-                  url: app.forum.attribute('apiUrl') + '/discussions/' + id,
-                }).then(payload => {
-                  if(payload.data.attributes.subscription === 'ignore'){
-                    return
-                  }
-                  if (app.forum.attribute('websocketAutoUpdate')) {
-                    const discussion = app.store.pushPayload(payload);
-                    this.attrs.state.addDiscussion(discussion);
-                  } else {
-                    app.pushedUpdates.push(payload);
-                    if (app.current.matches(IndexPage)) {
-                      app.setTitleCount(app.pushedUpdates.length);
+                method: 'GET',
+                url: app.forum.attribute('apiUrl') + '/discussions/' + id,
+              }).then(payload => {
+                if (payload.data.attributes.subscription === 'ignore') {
+                  return
+                }
+                if (params.filter && params.filter.tag) {
+                  let ids = payload.data.relationships.tags.data.map(function (t) {
+                    return t.id;
+                  });
+
+                  let tags_ids = [];
+                  let slugs = params.filter.tag.split(',');
+                  slugs.forEach(function (slug) {
+                    let tag = app.store.getBy('tags', 'slug', slug);
+                    if (tag) {
+                      tags_ids.push(tag.data.id);
                     }
-                    m.redraw();
+                  });
+                  
+                  let found = ids.some(r=> tags_ids.includes(r));
+                  console.log(found);
+                  if (found == false) {
+                    return
+                  };
+                }
+                if (app.forum.attribute('websocketAutoUpdate')) {
+                  let pages = app.discussions.getPages();
+                  for (let p = pages.length; p > 0; p--) {
+                    app.discussions.refresh(p);
                   }
-                });
+                } else {
+                  app.pushedUpdates.push(payload);
+                  if (app.current.matches(IndexPage)) {
+                    app.setTitleCount(app.pushedUpdates.length);
+                  }
+                  m.redraw();
+                }
+              });
             }
           }
         });
@@ -145,11 +161,6 @@ app.initializers.add('kyrne-websocket', () => {
       });
     });
   })
-
-  //Hide Refresh Button
-  extend(IndexPage.prototype, 'actionItems', items => {
-    items.remove('refresh');
-  });
 
   //Notifications channel
   app.pusher.then(object => {
