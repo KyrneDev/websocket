@@ -173,6 +173,11 @@ app.initializers.add('kyrne-websocket', () => {
         });
         app.notifications.clear();
         m.redraw();
+
+        let element = document.querySelector(".MobileTab .item-notifications .unread");
+        if (element) {
+            element.innerHTML = app.session.user.unreadNotificationCount();
+        }
       });
     }
   });
