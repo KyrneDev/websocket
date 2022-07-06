@@ -27,6 +27,7 @@
     },
     "require": {
         "flarum/core": "^1.0.2",
+        "pusher/pusher-php-server": "*",
         "cboden/ratchet": "^0.4.1",
         "clue/redis-react": "^2.3",
         "doctrine/dbal": "^2.9",
